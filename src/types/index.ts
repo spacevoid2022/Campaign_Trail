@@ -84,4 +84,5 @@ export interface Scenario {
   phase: 'governing' | 'campaign';
   question: string;
   answers: ScenarioAnswer[];
+  candidate_id?: string;
 }

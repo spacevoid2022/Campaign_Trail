@@ -324,7 +324,11 @@ export default function App() {
 
           {(phase === 'governing' || phase === 'campaign') && (
             <ScenarioCard 
-              scenario={SCENARIOS.find(s => s.id === state.current_turn) || null}
+              scenario={
+                SCENARIOS.find(s => s.id === state.current_turn && s.candidate_id === candidate?.id) ||
+                SCENARIOS.find(s => s.id === state.current_turn && !s.candidate_id) ||
+                null
+              }
               state={state}
               trumpMode={trumpMode}
               onAnswer={handleAnswer}
