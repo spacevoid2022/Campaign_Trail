@@ -60,6 +60,7 @@ export interface Candidate {
   };
   strengths: string[];
   weaknesses: string[];
+  mapId?: 'standard' | 'lincoln';
 }
 
 export interface AnswerEffects {

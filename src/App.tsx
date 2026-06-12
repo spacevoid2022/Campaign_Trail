@@ -3,6 +3,7 @@ import { CandidateSelect } from './components/CandidateSelect';
 import { Header } from './components/Header';
 import { Dashboard } from './components/Dashboard';
 import { ElectoralMap } from './components/ElectoralMap';
+import { LincolnMap } from './components/LincolnMap';
 import { PollingPanel } from './components/PollingPanel';
 import { ScenarioCard } from './components/ScenarioCard';
 import { MidtermPanel } from './components/MidtermPanel';
@@ -10,6 +11,7 @@ import { ResultsPanel } from './components/ResultsPanel';
 import { CANDIDATES } from './data/candidates';
 import { SCENARIOS } from './data/scenarios';
 import { INITIAL_STATE } from './data/initialState';
+import { LINCOLN_INITIAL_STATE } from './data/lincolnState';
 import { GameState, Candidate, ScenarioAnswer, Regions } from './types';
 import { AudioFX } from './utils/audio';
 import { calculateProjectedVoteShare } from './utils/gameLogic';
@@ -40,15 +42,17 @@ export default function App() {
     setCandidate(c);
     AudioFX.playPhase();
 
-    const newState = { ...INITIAL_STATE };
+    // Use the correct base state for this candidate's map layout
+    const baseState = c.mapId === 'lincoln' ? LINCOLN_INITIAL_STATE : INITIAL_STATE;
+    const newState = { ...baseState };
     newState.approval = c.approval;
     newState.political_capital = c.capital;
     newState.base_enthusiasm = c.enthusiasm;
     newState.funds = c.funds;
     newState.legislative_support = c.legislative_support;
-    
-    // Deep copy regions to apply candidate strengths
-    newState.regions = JSON.parse(JSON.stringify(INITIAL_STATE.regions));
+
+    // Deep copy regions and apply candidate starting polling values
+    newState.regions = JSON.parse(JSON.stringify(baseState.regions));
     Object.keys(newState.regions).forEach(k => {
       const key = k as keyof Regions;
       newState.regions[key].incumbent_pct = c.regions[key];
@@ -339,7 +343,10 @@ export default function App() {
           {phase === 'results' && <ResultsPanel state={state} candidate={candidate} onRestart={handleRestart} />}
 
           <div className="map-grid">
-            <ElectoralMap state={state} trumpMode={trumpMode} onRegionClick={handleRegionClick} />
+            {candidate?.mapId === 'lincoln'
+              ? <LincolnMap state={state} trumpMode={trumpMode} onRegionClick={handleRegionClick} />
+              : <ElectoralMap state={state} trumpMode={trumpMode} onRegionClick={handleRegionClick} />
+            }
             <PollingPanel state={state} onRegionClick={handleRegionClick} />
           </div>
         </div>

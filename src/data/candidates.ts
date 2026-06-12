@@ -70,7 +70,8 @@ export const CANDIDATES: Candidate[] = [
     bio: "The Great Emancipator. An unparalleled statesman whose profound intellect and moral clarity can unite a fractured nation, though his profound principles often draw fierce regional hostility.",
     accent: '#475569',
     approval: 55, capital: 70, enthusiasm: 65, funds: 100000, legislative_support: 65,
-    regions: { northeast: 65.0, west_coast: 50.0, midwest: 60.0, south: 25.0, plains: 45.0 },
-    strengths: ['NE', 'MW'], weaknesses: ['SO']
+    regions: { northeast: 72.0, west_coast: 53.0, midwest: 55.0, south: 28.0, plains: 42.0 },
+    strengths: ['NE', 'MW'], weaknesses: ['SO'],
+    mapId: 'lincoln'
   }
 ];
