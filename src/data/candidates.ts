@@ -48,5 +48,29 @@ export const CANDIDATES: Candidate[] = [
     approval: 45, capital: 45, enthusiasm: 60, funds: 180000, legislative_support: 52,
     regions: { northeast: 58.0, west_coast: 63.0, midwest: 44.0, south: 38.0, plains: 34.0 },
     strengths: ['WC', 'NE'], weaknesses: ['PL', 'SO']
+  },
+  {
+    id: 'aoc', name: 'Alexandria Ocasio-Cortez', era: 'New Left Progressive', icon: '🗽',
+    bio: "A charismatic champion of the Green New Deal and progressive taxation. Unrivaled grassroots enthusiasm among young urban voters on the coasts, but faces deep institutional resistance in rural areas.",
+    accent: '#db2777',
+    approval: 43, capital: 40, enthusiasm: 90, funds: 160000, legislative_support: 42,
+    regions: { northeast: 62.0, west_coast: 64.0, midwest: 42.0, south: 32.0, plains: 28.0 },
+    strengths: ['NE', 'WC'], weaknesses: ['SO', 'PL']
+  },
+  {
+    id: 'obama', name: 'Barack Obama', era: 'Hope & Change Era', icon: '🌅',
+    bio: "A historic generational talent with peerless rhetorical skills and broad coalition appeal. Excels at balancing the establishment with grassroots energy, forming a highly competitive map.",
+    accent: '#0284c7',
+    approval: 52, capital: 60, enthusiasm: 75, funds: 200000, legislative_support: 58,
+    regions: { northeast: 58.0, west_coast: 59.0, midwest: 54.0, south: 45.0, plains: 40.0 },
+    strengths: ['WC', 'NE'], weaknesses: ['PL']
+  },
+  {
+    id: 'lincoln', name: 'Abraham Lincoln', era: 'Civil War Unifier', icon: '🎩',
+    bio: "The Great Emancipator. An unparalleled statesman whose profound intellect and moral clarity can unite a fractured nation, though his profound principles often draw fierce regional hostility.",
+    accent: '#475569',
+    approval: 55, capital: 70, enthusiasm: 65, funds: 100000, legislative_support: 65,
+    regions: { northeast: 65.0, west_coast: 50.0, midwest: 60.0, south: 25.0, plains: 45.0 },
+    strengths: ['NE', 'MW'], weaknesses: ['SO']
   }
 ];
