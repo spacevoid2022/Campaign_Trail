@@ -32,5 +32,21 @@ export const CANDIDATES: Candidate[] = [
     approval: 48, capital: 50, enthusiasm: 45, funds: 150000, legislative_support: 50,
     regions: { northeast: 54.0, west_coast: 56.0, midwest: 49.0, south: 43.0, plains: 38.0 },
     strengths: ['WC', 'NE'], weaknesses: ['PL']
+  },
+  {
+    id: 'trump', name: 'Donald J. Trump', era: 'MAGA Populist', icon: '🦅',
+    bio: "The 45th President. Commands fierce loyalty and massive base enthusiasm, particularly in the South and Plains, but faces intense polarization and stiff opposition on the coasts.",
+    accent: '#dc2626',
+    approval: 46, capital: 55, enthusiasm: 85, funds: 190000, legislative_support: 45,
+    regions: { northeast: 40.0, west_coast: 35.0, midwest: 51.0, south: 58.0, plains: 62.0 },
+    strengths: ['PL', 'SO'], weaknesses: ['WC', 'NE']
+  },
+  {
+    id: 'newsom', name: 'Gavin Newsom', era: 'Coastal Progressive', icon: '🌉',
+    bio: "The California governor is a fundraising powerhouse with immense strength on the coasts and among progressive elites, but he struggles to connect with working-class voters in the heartland.",
+    accent: '#2563eb',
+    approval: 45, capital: 45, enthusiasm: 60, funds: 180000, legislative_support: 52,
+    regions: { northeast: 58.0, west_coast: 63.0, midwest: 44.0, south: 38.0, plains: 34.0 },
+    strengths: ['WC', 'NE'], weaknesses: ['PL', 'SO']
   }
 ];
