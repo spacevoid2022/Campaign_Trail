@@ -31,7 +31,7 @@ export const ElectoralMap: React.FC<Props> = ({ state, trumpMode, onRegionClick 
   };
 
   return (
-    <div className="map-grid">
+    <>
       <div className="glass-card map-card">
         <h2 className="card-title" style={{ width: '100%' }}>
           Electoral Map
@@ -107,7 +107,7 @@ export const ElectoralMap: React.FC<Props> = ({ state, trumpMode, onRegionClick 
       {hoverRegion && state.regions[hoverRegion as keyof typeof state.regions] && (
         <Tooltip region={state.regions[hoverRegion as keyof typeof state.regions]} state={state} trumpMode={trumpMode} x={mousePos.x} y={mousePos.y} />
       )}
-    </div>
+    </>
   );
 };
 
