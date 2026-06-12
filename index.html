@@ -1,0 +1,2289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INCUMBENT: Campaign Simulator</title>
+  <!-- Google Fonts Outfit & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-primary: #020617;
+      --bg-card: rgba(15, 23, 42, 0.7);
+      --border-card: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.18);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      
+      --color-player: #0ea5e9;
+      --color-player-glow: rgba(14, 165, 233, 0.4);
+      --color-opponent: #ef4444;
+      --color-opponent-glow: rgba(239, 68, 68, 0.4);
+      --color-neutral: #8b5cf6;
+      --color-neutral-glow: rgba(139, 92, 246, 0.4);
+      
+      --color-success: #10b981;
+      --color-warning: #f59e0b;
+      --color-danger: #ef4444;
+      
+      --font-main: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(14, 165, 233, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 45%);
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    header {
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-card);
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-badge {
+      background: linear-gradient(135deg, var(--color-player), var(--color-neutral));
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #fff;
+      font-size: 1.2rem;
+      box-shadow: 0 0 15px var(--color-player-glow);
+    }
+
+    .header-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      background: linear-gradient(to right, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-sound {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      color: var(--text-primary);
+      cursor: pointer;
+      font-family: var(--font-main);
+      font-size: 0.85rem;
+      padding: 0.5rem 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-sound:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--border-hover);
+    }
+
+    /* Ambient Lights */
+    .ambient-glow-1 {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.08) 0%, transparent 70%);
+      top: 15%;
+      left: -100px;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .ambient-glow-2 {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 70%);
+      bottom: 15%;
+      right: -100px;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Game Layout */
+    .app-container {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 1.5rem;
+      max-width: 1440px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    @media (max-width: 1100px) {
+      .app-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Glass Cards */
+    .glass-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .glass-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 16px 35px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .card-title span.badge {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* Stats Panel Styles */
+    .metric-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .metric-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.35rem;
+      font-weight: 500;
+    }
+
+    .metric-value {
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .progress-bar-bg {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      height: 10px;
+      border-radius: 9999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 9999px;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .progress-bar-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%);
+      animation: progress-slide 2s infinite linear;
+    }
+
+    @keyframes progress-slide {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .funds-container {
+      background: rgba(16, 185, 129, 0.05);
+      border: 1px solid rgba(16, 185, 129, 0.15);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .funds-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-success);
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+    }
+
+    .funds-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--color-success);
+      text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+      font-family: var(--font-mono);
+    }
+
+    /* History Log */
+    .history-log-wrapper {
+      margin-top: 1.5rem;
+    }
+
+    .history-log {
+      background: rgba(2, 6, 23, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 0.75rem;
+      height: 185px;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      line-height: 1.4;
+      color: #cbd5e1;
+      scroll-behavior: smooth;
+    }
+
+    .log-entry {
+      margin-bottom: 0.6rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      animation: logFadeIn 0.3s ease-out;
+    }
+
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+
+    @keyframes logFadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .log-tag {
+      font-weight: bold;
+      color: var(--color-player);
+    }
+
+    .log-feedback {
+      display: block;
+      margin-top: 0.15rem;
+      color: var(--text-secondary);
+    }
+
+    .log-effects {
+      display: block;
+      margin-top: 0.15rem;
+      color: var(--color-success);
+      font-size: 0.75rem;
+    }
+
+    /* Game Right Board */
+    .game-board {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Phase & Turn Info */
+    .game-phase-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 0.75rem 1.25rem;
+    }
+
+    .phase-badge {
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      text-transform: uppercase;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .phase-governing {
+      background: rgba(139, 92, 246, 0.2);
+      border: 1px solid var(--color-neutral);
+      color: #c084fc;
+    }
+
+    .phase-campaign {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid var(--color-opponent);
+      color: #fca5a5;
+    }
+
+    .turn-tracker {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .turn-node {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: bold;
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
+    }
+
+    .turn-node.past {
+      background: rgba(14, 165, 233, 0.2);
+      border-color: var(--color-player);
+      color: var(--color-player);
+    }
+
+    .turn-node.active {
+      background: var(--color-player);
+      border-color: var(--color-player);
+      color: #000;
+      box-shadow: 0 0 10px var(--color-player-glow);
+      transform: scale(1.15);
+    }
+
+    /* Scenario Card */
+    .scenario-card {
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .scenario-phase-indicator {
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: var(--color-player);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .scenario-question {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      line-height: 1.4;
+      color: #fff;
+    }
+
+    .answers-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      margin-top: auto;
+    }
+
+    .answer-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      text-align: left;
+      font-family: var(--font-main);
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .answer-letter {
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 4px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+      color: var(--text-secondary);
+    }
+
+    .answer-btn:hover:not(:disabled) {
+      background: rgba(14, 165, 233, 0.06);
+      border-color: var(--color-player);
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1);
+    }
+
+    .answer-btn:hover:not(:disabled) .answer-letter {
+      background: var(--color-player);
+      color: #000;
+    }
+
+    .answer-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Lock banner for campaign phase stops */
+    .stop-lock-banner {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px dashed rgba(245, 158, 11, 0.3);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--color-warning);
+      font-size: 0.9rem;
+      animation: pulseAlert 2s infinite alternate;
+    }
+
+    @keyframes pulseAlert {
+      0% { background: rgba(245, 158, 11, 0.05); }
+      100% { background: rgba(245, 158, 11, 0.15); }
+    }
+
+    /* Map & Grid Layout */
+    .map-grid {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 850px) {
+      .map-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Electoral Map Styling */
+    .map-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 380px;
+    }
+
+    .map-svg-container {
+      width: 100%;
+      max-width: 580px;
+      position: relative;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
+    }
+
+    .region-path {
+      stroke: rgba(255, 255, 255, 0.12);
+      stroke-width: 2;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+
+    .region-path:hover {
+      stroke: rgba(255, 255, 255, 0.85);
+      filter: brightness(1.2);
+    }
+
+    .selected-stop {
+      stroke: var(--color-success) !important;
+      stroke-width: 3.5 !important;
+      filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.6)) brightness(1.15);
+    }
+
+    /* SVG Label Styling */
+    .map-label-name {
+      font-family: var(--font-main);
+      font-weight: 800;
+      font-size: 11px;
+      fill: #ffffff;
+      pointer-events: none;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8), 0 2px 10px rgba(0,0,0,0.9);
+      text-anchor: middle;
+      letter-spacing: 0.05em;
+    }
+
+    .map-label-votes {
+      font-family: var(--font-main);
+      font-weight: 400;
+      font-size: 10px;
+      fill: rgba(255,255,255,0.8);
+      pointer-events: none;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+      text-anchor: middle;
+    }
+
+    .map-label-polling {
+      font-family: var(--font-mono);
+      font-weight: bold;
+      font-size: 9px;
+      fill: #22c55e;
+      pointer-events: none;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+      text-anchor: middle;
+    }
+
+    /* Polling Split Sidebar Panel */
+    .polling-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .polling-row {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 0.65rem 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .polling-row:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .polling-row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .polling-row-ev {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+    }
+
+    .polling-split-bar {
+      height: 6px;
+      border-radius: 3px;
+      display: flex;
+      overflow: hidden;
+      margin-top: 0.2rem;
+    }
+
+    .split-player {
+      background: var(--color-player);
+      height: 100%;
+      transition: width 0.4s ease;
+    }
+
+    .split-opponent {
+      background: var(--color-opponent);
+      height: 100%;
+      transition: width 0.4s ease;
+    }
+
+    .polling-numeric {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      font-weight: bold;
+    }
+
+    .polling-numeric-player {
+      color: var(--color-player);
+    }
+
+    .polling-numeric-opponent {
+      color: var(--color-opponent);
+    }
+
+    /* Electoral Vote Progress Tracker */
+    .ev-tracker-container {
+      margin-top: 1rem;
+      padding: 1.25rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      position: relative;
+    }
+
+    .ev-tracker-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .ev-bar-wrapper {
+      height: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 9px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+    }
+
+    .ev-bar-player {
+      background: linear-gradient(90deg, #0284c7, var(--color-player));
+      height: 100%;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .ev-bar-opponent {
+      background: linear-gradient(90deg, var(--color-opponent), #b91c1c);
+      height: 100%;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .ev-marker-win {
+      position: absolute;
+      left: 50.58%; /* 43 / 85 = 50.58% */
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #ffffff;
+      box-shadow: 0 0 8px #fff;
+      z-index: 10;
+    }
+
+    .ev-marker-label {
+      position: absolute;
+      left: 50.58%;
+      transform: translateX(-50%);
+      top: -22px;
+      font-size: 0.68rem;
+      color: #fff;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 1px 4px;
+      border-radius: 4px;
+      pointer-events: none;
+      font-weight: 800;
+    }
+
+    /* Tooltip styling */
+    .map-tooltip {
+      position: absolute;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border-hover);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: #fff;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease-in-out;
+      z-index: 1000;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      font-size: 0.82rem;
+      font-family: var(--font-main);
+      line-height: 1.4;
+      backdrop-filter: blur(10px);
+    }
+
+    .tooltip-header {
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 0.15rem;
+    }
+
+    /* Toast Notifications */
+    #toast-container {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .toast {
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      font-size: 0.85rem;
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .toast.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast-info { border-left: 4px solid var(--color-player); }
+    .toast-success { border-left: 4px solid var(--color-success); }
+    .toast-warning { border-left: 4px solid var(--color-warning); }
+
+    /* Results Screen Styling */
+    .results-panel {
+      text-align: center;
+      animation: slideUp 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .results-outcome {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .outcome-win {
+      background: linear-gradient(to right, #34d399, #059669);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px rgba(52, 211, 153, 0.2);
+    }
+
+    .outcome-loss {
+      background: linear-gradient(to right, #f87171, #dc2626);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px rgba(248, 113, 113, 0.2);
+    }
+
+    .results-sub {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .results-stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 600px) {
+      .results-stats-row {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .results-stat-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .results-stat-val {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .results-stat-lbl {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .results-table th, .results-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .results-table th {
+      font-weight: 800;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    .results-table td {
+      color: #fff;
+    }
+
+    .badge-winner {
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .badge-player {
+      background: rgba(14, 165, 233, 0.2);
+      border: 1px solid var(--color-player);
+      color: #38bdf8;
+    }
+
+    .badge-opponent {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid var(--color-opponent);
+      color: #fca5a5;
+    }
+
+    .btn-restart {
+      background: linear-gradient(135deg, var(--color-player), var(--color-neutral));
+      border: none;
+      color: #fff;
+      padding: 1rem 2rem;
+      font-size: 1.05rem;
+      font-weight: 800;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: var(--font-main);
+      box-shadow: 0 8px 25px rgba(14, 165, 233, 0.3);
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-restart:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(14, 165, 233, 0.5);
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      margin: 3rem 0 1.5rem;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-logo">
+      <div class="logo-badge">I</div>
+      <h1 class="header-title">INCUMBENT</h1>
+    </div>
+    <div class="header-controls">
+      <button class="btn-sound" id="sound-toggle" onclick="toggleMute()">
+        <span id="sound-icon">🔊</span> <span id="sound-label">SFX Enabled</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="ambient-glow-1"></div>
+  <div class="ambient-glow-2"></div>
+
+  <div id="toast-container"></div>
+  <div id="map-tooltip" class="map-tooltip"></div>
+
+  <main class="app-container">
+    
+    <!-- LEFT SIDEBAR: DASHBOARD & HISTORY -->
+    <aside class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem;">
+      <div>
+        <h2 class="card-title">Dashboard <span class="badge" style="background: rgba(14, 165, 233, 0.15); color: var(--color-player);">STATUS</span></h2>
+        
+        <!-- FUNDS -->
+        <div class="funds-container">
+          <div class="funds-label">Campaign Budget</div>
+          <div class="funds-value" id="funds-display">$150,000</div>
+        </div>
+
+        <!-- METRICS -->
+        <!-- Approval Rating -->
+        <div class="metric-group">
+          <div class="metric-label">
+            <span>National Approval Rating</span>
+            <span class="metric-value" id="approval-val">48%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="approval-bar" class="progress-bar-fill" style="width: 48%; background: var(--color-player);"></div>
+          </div>
+        </div>
+
+        <!-- Political Capital -->
+        <div class="metric-group">
+          <div class="metric-label">
+            <span>Political Capital</span>
+            <span class="metric-value" id="capital-val">50/100</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="capital-bar" class="progress-bar-fill" style="width: 50%; background: var(--color-warning);"></div>
+          </div>
+        </div>
+
+        <!-- Base Enthusiasm -->
+        <div class="metric-group">
+          <div class="metric-label">
+            <span>Base Enthusiasm</span>
+            <span class="metric-value" id="enthusiasm-val">45%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="enthusiasm-bar" class="progress-bar-fill" style="width: 45%; background: var(--color-neutral);"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HISTORY LOG -->
+      <div class="history-log-wrapper">
+        <h2 class="card-title" style="margin-bottom: 0.75rem;">Cabinet Log</h2>
+        <div class="history-log" id="history-log">
+          <div class="log-entry">
+            <span class="log-tag">[SYSTEM]</span> Simulation initialized. Governing phase active.
+            <span class="log-feedback">Your term has begun. Prepare for legislative and policy decisions.</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT SIDEBAR: PANELS & MAP -->
+    <div class="game-board">
+      
+      <!-- TURN PROGRESS BAR & PHASE -->
+      <div class="game-phase-bar">
+        <div id="phase-badge" class="phase-badge phase-governing">Governing Phase</div>
+        <div class="turn-tracker" id="turn-tracker">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- INTERACTIVE PANEL (QUESTIONS / RESULTS) -->
+      <section class="glass-card scenario-card" id="interactive-panel">
+        <div>
+          <div class="scenario-phase-indicator" id="question-phase-lbl">Governing Scenario</div>
+          <div class="scenario-question" id="question-text">
+            Loading initial scenario...
+          </div>
+        </div>
+        
+        <!-- Campaign Stop Alert (Visible only in Campaign phase) -->
+        <div class="stop-lock-banner" id="campaign-stop-banner" style="display: none;">
+          <span>📌</span>
+          <span id="campaign-stop-text">Please click a region on the electoral map below to select your Campaign Stop first.</span>
+        </div>
+
+        <div class="answers-container" id="answers-container">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- RESULTS PANEL (HIDDEN BY DEFAULT) -->
+      <section class="glass-card results-panel" id="results-panel" style="display: none;">
+        <h2 class="results-outcome" id="results-outcome">Re-election Defeated</h2>
+        <p class="results-sub" id="results-sub">You did not secure the required 43 Electoral Votes.</p>
+        
+        <div class="results-stats-row">
+          <div class="results-stat-box">
+            <div class="results-stat-val" id="res-val-ev">39</div>
+            <div class="results-stat-lbl">Electoral Votes</div>
+          </div>
+          <div class="results-stat-box">
+            <div class="results-stat-val" id="res-val-approval">49%</div>
+            <div class="results-stat-lbl">Final Approval</div>
+          </div>
+          <div class="results-stat-box">
+            <div class="results-stat-val" id="res-val-enthusiasm">45%</div>
+            <div class="results-stat-lbl">Base Enthusiasm</div>
+          </div>
+          <div class="results-stat-box">
+            <div class="results-stat-val" id="res-val-funds">$125K</div>
+            <div class="results-stat-lbl">Remaining Funds</div>
+          </div>
+        </div>
+
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Region</th>
+              <th>Electoral Votes</th>
+              <th>Final Polling Split</th>
+              <th>Winner</th>
+            </tr>
+          </thead>
+          <tbody id="results-table-body">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+
+        <button class="btn-restart" onclick="restartGame()">Restart Campaign</button>
+      </section>
+
+      <!-- MAP AND REGIONAL POLLING DETAILS -->
+      <div class="map-grid">
+        
+        <!-- SVG Map Card -->
+        <div class="glass-card map-card">
+          <h2 class="card-title" style="width: 100%;">Electoral Map 
+            <span class="badge" style="background: rgba(139, 92, 246, 0.15); color: var(--color-neutral);" id="map-phase-badge">GOVERNING STATUS</span>
+          </h2>
+          
+          <div class="map-svg-container">
+            <svg viewBox="0 0 600 350" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <!-- Strong Player (Blue) -->
+                <linearGradient id="grad-strong-player" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#0369a1" />
+                  <stop offset="100%" stop-color="#0284c7" />
+                </linearGradient>
+                <!-- Lean Player (Sky Blue) -->
+                <linearGradient id="grad-lean-player" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#0284c7" />
+                  <stop offset="100%" stop-color="#38bdf8" />
+                </linearGradient>
+                <!-- Toss-up (Purple) -->
+                <linearGradient id="grad-tossup" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#6d28d9" />
+                  <stop offset="100%" stop-color="#a78bfa" />
+                </linearGradient>
+                <!-- Lean Opponent (Light Red) -->
+                <linearGradient id="grad-lean-opponent" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#b91c1c" />
+                  <stop offset="100%" stop-color="#f87171" />
+                </linearGradient>
+                <!-- Strong Opponent (Dark Red) -->
+                <linearGradient id="grad-strong-opponent" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#7f1d1d" />
+                  <stop offset="100%" stop-color="#dc2626" />
+                </linearGradient>
+              </defs>
+
+              <!-- Map Paths -->
+              <!-- West Coast -->
+              <path id="region-wc" data-region-key="west_coast" class="region-path" 
+                d="M 30,50 L 110,50 L 110,170 L 160,220 L 130,290 L 80,290 L 30,160 Z" />
+              
+              <!-- Plains -->
+              <path id="region-pl" data-region-key="plains" class="region-path" 
+                d="M 110,50 L 270,50 L 270,220 L 160,220 L 110,170 Z" />
+              
+              <!-- Midwest -->
+              <path id="region-mw" data-region-key="midwest" class="region-path" 
+                d="M 270,50 L 430,50 L 430,150 L 270,150 Z" />
+              
+              <!-- Northeast -->
+              <path id="region-ne" data-region-key="northeast" class="region-path" 
+                d="M 430,50 L 560,40 L 580,110 L 470,150 L 430,150 Z" />
+              
+              <!-- South -->
+              <path id="region-so" data-region-key="south" class="region-path" 
+                d="M 160,220 L 270,220 L 270,150 L 430,150 L 470,150 L 510,210 L 470,280 L 310,280 L 130,290 Z" />
+
+              <!-- Map Labels -->
+              <!-- West Coast -->
+              <g class="map-label-group">
+                <text x="75" y="145" class="map-label-name">WEST COAST</text>
+                <text x="75" y="160" class="map-label-votes">21 EV</text>
+                <text x="75" y="175" class="map-label-polling" id="label-wc-poll">56% - 44%</text>
+              </g>
+
+              <!-- Plains -->
+              <g class="map-label-group">
+                <text x="190" y="125" class="map-label-name">PLAINS</text>
+                <text x="190" y="140" class="map-label-votes">10 EV</text>
+                <text x="190" y="155" class="map-label-polling" id="label-pl-poll">38% - 62%</text>
+              </g>
+
+              <!-- Midwest -->
+              <g class="map-label-group">
+                <text x="350" y="90" class="map-label-name">MIDWEST</text>
+                <text x="350" y="105" class="map-label-votes">16 EV</text>
+                <text x="350" y="120" class="map-label-polling" id="label-mw-poll">49% - 51%</text>
+              </g>
+
+              <!-- Northeast -->
+              <g class="map-label-group">
+                <text x="495" y="90" class="map-label-name">NORTHEAST</text>
+                <text x="495" y="105" class="map-label-votes">18 EV</text>
+                <text x="495" y="120" class="map-label-polling" id="label-ne-poll">54% - 46%</text>
+              </g>
+
+              <!-- South -->
+              <g class="map-label-group">
+                <text x="320" y="225" class="map-label-name">SOUTH</text>
+                <text x="320" y="240" class="map-label-votes">20 EV</text>
+                <text x="320" y="255" class="map-label-polling" id="label-so-poll">43% - 57%</text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- ELECTORAL VOTE PROGRESS TRACKER -->
+          <div class="ev-tracker-container" style="width: 100%;">
+            <div class="ev-marker-label">43 TO WIN</div>
+            <div class="ev-tracker-header">
+              <span id="ev-proj-player" style="color: var(--color-player);">Incumbent: 39 EV</span>
+              <span id="ev-proj-opponent" style="color: var(--color-opponent);">Challenger: 46 EV</span>
+            </div>
+            <div class="ev-bar-wrapper">
+              <div class="ev-marker-win"></div>
+              <div id="ev-bar-player" class="ev-bar-player" style="width: 45.88%;"></div> <!-- 39 / 85 -->
+              <div id="ev-bar-opponent" class="ev-bar-opponent" style="width: 54.12%;"></div> <!-- 46 / 85 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Polling Split Sidebar -->
+        <aside class="glass-card polling-panel">
+          <h2 class="card-title" style="margin-bottom: 0.75rem;">Regional Polling</h2>
+          
+          <!-- Northeast Row -->
+          <div class="polling-row" data-region="northeast">
+            <div class="polling-row-header">
+              <span>Northeast</span>
+              <span class="polling-row-ev">18 EV</span>
+            </div>
+            <div class="polling-split-bar">
+              <div id="split-ne-player" class="split-player" style="width: 54%;"></div>
+              <div id="split-ne-opponent" class="split-opponent" style="width: 46%;"></div>
+            </div>
+            <div class="polling-numeric">
+              <span id="num-ne-player" class="polling-numeric-player">54.0%</span>
+              <span id="num-ne-opponent" class="polling-numeric-opponent">46.0%</span>
+            </div>
+          </div>
+
+          <!-- West Coast Row -->
+          <div class="polling-row" data-region="west_coast">
+            <div class="polling-row-header">
+              <span>West Coast</span>
+              <span class="polling-row-ev">21 EV</span>
+            </div>
+            <div class="polling-split-bar">
+              <div id="split-wc-player" class="split-player" style="width: 56%;"></div>
+              <div id="split-wc-opponent" class="split-opponent" style="width: 44%;"></div>
+            </div>
+            <div class="polling-numeric">
+              <span id="num-wc-player" class="polling-numeric-player">56.0%</span>
+              <span id="num-wc-opponent" class="polling-numeric-opponent">44.0%</span>
+            </div>
+          </div>
+
+          <!-- Midwest Row -->
+          <div class="polling-row" data-region="midwest">
+            <div class="polling-row-header">
+              <span>Midwest</span>
+              <span class="polling-row-ev">16 EV</span>
+            </div>
+            <div class="polling-split-bar">
+              <div id="split-mw-player" class="split-player" style="width: 49%;"></div>
+              <div id="split-mw-opponent" class="split-opponent" style="width: 51%;"></div>
+            </div>
+            <div class="polling-numeric">
+              <span id="num-mw-player" class="polling-numeric-player">49.0%</span>
+              <span id="num-mw-opponent" class="polling-numeric-opponent">51.0%</span>
+            </div>
+          </div>
+
+          <!-- South Row -->
+          <div class="polling-row" data-region="south">
+            <div class="polling-row-header">
+              <span>South</span>
+              <span class="polling-row-ev">20 EV</span>
+            </div>
+            <div class="polling-split-bar">
+              <div id="split-so-player" class="split-player" style="width: 43%;"></div>
+              <div id="split-so-opponent" class="split-opponent" style="width: 57%;"></div>
+            </div>
+            <div class="polling-numeric">
+              <span id="num-so-player" class="polling-numeric-player">43.0%</span>
+              <span id="num-so-opponent" class="polling-numeric-opponent">57.0%</span>
+            </div>
+          </div>
+
+          <!-- Plains Row -->
+          <div class="polling-row" data-region="plains">
+            <div class="polling-row-header">
+              <span>Plains</span>
+              <span class="polling-row-ev">10 EV</span>
+            </div>
+            <div class="polling-split-bar">
+              <div id="split-pl-player" class="split-player" style="width: 38%;"></div>
+              <div id="split-pl-opponent" class="split-opponent" style="width: 62%;"></div>
+            </div>
+            <div class="polling-numeric">
+              <span id="num-pl-player" class="polling-numeric-player">38.0%</span>
+              <span id="num-pl-opponent" class="polling-numeric-opponent">62.0%</span>
+            </div>
+          </div>
+
+        </aside>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    INCUMBENT: CAMPAIGN SIMULATOR &copy; 2026. BUILT WITH VANILLA WEB TECHNOLOGY.
+  </footer>
+
+  <!-- JAVASCRIPT GAME LOGIC -->
+  <script>
+    // Web Audio Synthesizer for Retro Effects
+    let isMuted = false;
+    const AudioFX = {
+      ctx: null,
+      init() {
+        if (isMuted) return;
+        if (!this.ctx) {
+          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+      },
+      playClick() {
+        this.init();
+        if (isMuted || !this.ctx) return;
+        
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        
+        osc.frequency.setValueAtTime(750, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(150, this.ctx.currentTime + 0.12);
+        
+        gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.12);
+        
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.12);
+      },
+      playHover() {
+        this.init();
+        if (isMuted || !this.ctx) return;
+        
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        
+        osc.frequency.setValueAtTime(480, this.ctx.currentTime);
+        
+        gain.gain.setValueAtTime(0.008, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.04);
+        
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.04);
+      },
+      playPhase() {
+        this.init();
+        if (isMuted || !this.ctx) return;
+        
+        const now = this.ctx.currentTime;
+        const notes = [380, 520, 780];
+        notes.forEach((freq, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          
+          osc.frequency.setValueAtTime(freq, now + i * 0.07);
+          gain.gain.setValueAtTime(0.03, now + i * 0.07);
+          gain.gain.linearRampToValueAtTime(0, now + i * 0.07 + 0.18);
+          
+          osc.start(now + i * 0.07);
+          osc.stop(now + i * 0.07 + 0.18);
+        });
+      },
+      playVictory() {
+        this.init();
+        if (isMuted || !this.ctx) return;
+        
+        const now = this.ctx.currentTime;
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        notes.forEach((freq, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + i * 0.12);
+          
+          gain.gain.setValueAtTime(0.06, now + i * 0.12);
+          gain.gain.linearRampToValueAtTime(0, now + i * 0.12 + 0.4);
+          
+          osc.start(now + i * 0.12);
+          osc.stop(now + i * 0.12 + 0.4);
+        });
+      },
+      playDefeat() {
+        this.init();
+        if (isMuted || !this.ctx) return;
+        
+        const now = this.ctx.currentTime;
+        const notes = [293.66, 277.18, 261.63, 220.00]; // D4, C#4, C4, A3
+        notes.forEach((freq, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, now + i * 0.16);
+          
+          gain.gain.setValueAtTime(0.05, now + i * 0.16);
+          gain.gain.linearRampToValueAtTime(0, now + i * 0.16 + 0.5);
+          
+          osc.start(now + i * 0.16);
+          osc.stop(now + i * 0.16 + 0.5);
+        });
+      }
+    };
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      const icon = document.getElementById('sound-icon');
+      const label = document.getElementById('sound-label');
+      if (isMuted) {
+        icon.textContent = '🔇';
+        label.textContent = 'SFX Muted';
+      } else {
+        icon.textContent = '🔊';
+        label.textContent = 'SFX Enabled';
+        AudioFX.playClick();
+      }
+    }
+
+    // Scenarios Dataset
+    const SCENARIOS = [
+      {
+        id: 1,
+        phase: "governing",
+        question: "A sudden economic downturn has hit manufacturing. Your base wants heavy industry bailouts, but moderates demand fiscal austerity. How do you respond?",
+        answers: [
+          {
+            text: "Sign a massive corporate bailout and stimulus package.",
+            feedback: "Your working-class base cheers, but fiscal conservatives turn against you. Rust Belt and Midwest polling rises.",
+            effects: { political_capital: -15, approval: 5, base_enthusiasm: 15, funds: -50000 },
+            regional_effects: { midwest: 5.0, plains: 2.0, northeast: -2.0 }
+          },
+          {
+            text: "Implement austerity measures to curb future inflation.",
+            feedback: "Markets stabilize, but your core voters feel betrayed. Midwest manufacturing regions sour on you.",
+            effects: { political_capital: 10, approval: -10, base_enthusiasm: -20, funds: 25000 },
+            regional_effects: { midwest: -5.0, plains: -2.0, northeast: 2.0 }
+          },
+          {
+            text: "Negotiate a targeted compromise package focused strictly on manufacturing tax credits.",
+            feedback: "A middle-ground solution that prevents total collapse but fails to excite either the base or fiscal conservatives.",
+            effects: { political_capital: 5, approval: 0, base_enthusiasm: -5, funds: -15000 },
+            regional_effects: { midwest: 2.0 }
+          }
+        ]
+      },
+      {
+        id: 2,
+        phase: "governing",
+        question: "A Supreme Court vacancy has opened up. Your choice will shape the judiciary for decades. Who do you nominate?",
+        answers: [
+          {
+            text: "Nominate a staunch progressive judge aligned with your base.",
+            feedback: "Your base is fired up, but moderate senators threaten a filibuster, depleting political capital.",
+            effects: { political_capital: -25, approval: -3, base_enthusiasm: 25, funds: 0 },
+            regional_effects: { west_coast: 3.5, northeast: 3.5, south: -4.0 }
+          },
+          {
+            text: "Choose a consensus moderate judge with bipartisan appeal.",
+            feedback: "Senate confirms them quickly. Moderates approve, but your progressive base is highly disappointed.",
+            effects: { political_capital: 15, approval: 6, base_enthusiasm: -15, funds: 0 },
+            regional_effects: { midwest: 2.0, south: 2.0, northeast: -1.0 }
+          },
+          {
+            text: "Nominate a business-friendly jurist recommended by major donors.",
+            feedback: "Campaign donations surge from PACs, but your voters criticize corporate influence.",
+            effects: { political_capital: -5, approval: -5, base_enthusiasm: -10, funds: 50000 },
+            regional_effects: { plains: 3.0, west_coast: -2.0 }
+          }
+        ]
+      },
+      {
+        id: 3,
+        phase: "governing",
+        question: "Tensions are rising with a major trading partner over technology exports. They threaten tariffs on your agricultural products.",
+        answers: [
+          {
+            text: "Retaliate with heavy agricultural tariffs to protect national security.",
+            feedback: "Appeals to national pride, but agricultural exports drop. Plains and South region splits suffer.",
+            effects: { political_capital: 5, approval: -4, base_enthusiasm: 10, funds: -20000 },
+            regional_effects: { plains: -6.0, south: -4.0, midwest: 1.0 }
+          },
+          {
+            text: "Negotiate a swift trade compromise and lower tariffs.",
+            feedback: "Suburbs and tech hubs on the coasts cheer the stability, but industrial workers feel sold out.",
+            effects: { political_capital: 10, approval: 5, base_enthusiasm: -10, funds: 15000 },
+            regional_effects: { west_coast: 4.0, northeast: 3.0, midwest: -4.0 }
+          },
+          {
+            text: "Launch a diplomatic appeal to the World Trade Organization.",
+            feedback: "Avoids direct escalation, but critics call your administration weak and indecisive.",
+            effects: { political_capital: -5, approval: -2, base_enthusiasm: -5, funds: 0 },
+            regional_effects: { plains: -1.0 }
+          }
+        ]
+      },
+      {
+        id: 4,
+        phase: "governing",
+        question: "A major energy bill is before Congress. Environmentalists demand carbon emissions cuts, while energy independence groups advocate for oil exploration.",
+        answers: [
+          {
+            text: "Sign an executive order banning new drilling and subsidizing clean energy.",
+            feedback: "Coastal progressives celebrate the climate action, but energy bills rise, causing backlash in Plains states.",
+            effects: { political_capital: -10, approval: -2, base_enthusiasm: 20, funds: -30000 },
+            regional_effects: { west_coast: 5.0, northeast: 4.0, plains: -5.0, south: -3.0 }
+          },
+          {
+            text: "Open up public lands for oil exploration to lower fuel prices.",
+            feedback: "Gas prices fall and energy corporations fund your campaign, but climate activists hold protests.",
+            effects: { political_capital: 5, approval: 4, base_enthusiasm: -20, funds: 45000 },
+            regional_effects: { plains: 5.0, south: 4.0, west_coast: -6.0, northeast: -4.0 }
+          },
+          {
+            text: "Push for a bipartisan package focusing on road, bridge, and electrical grid upgrades.",
+            feedback: "A massive popular infrastructure bill. High political capital spent but broadly liked.",
+            effects: { political_capital: -15, approval: 8, base_enthusiasm: 5, funds: -20000 },
+            regional_effects: { midwest: 4.0, south: 2.0, northeast: 2.0 }
+          }
+        ]
+      },
+      {
+        id: 5,
+        phase: "governing",
+        question: "Healthcare premium costs are spiking. The public demands action. How will your administration intervene?",
+        answers: [
+          {
+            text: "Push for a comprehensive Public Option healthcare program.",
+            feedback: "Requires extensive political horse-trading and costs massive funds, but fires up core supporters.",
+            effects: { political_capital: -35, approval: 5, base_enthusiasm: 30, funds: -60000 },
+            regional_effects: { northeast: 3.0, west_coast: 3.0, plains: -4.0 }
+          },
+          {
+            text: "Deregulate state insurance markets to increase consumer choice.",
+            feedback: "Conserves funds and capital, but the base calls it a giveaway to insurance giants.",
+            effects: { political_capital: 10, approval: -5, base_enthusiasm: -15, funds: 10000 },
+            regional_effects: { south: 3.5, plains: 3.5, northeast: -3.0 }
+          },
+          {
+            text: "Focus on capping prescription drug prices (insulin and seniors' meds).",
+            feedback: "Extremely popular, bipartisan win. Moderate funding cost, solid approval boost.",
+            effects: { political_capital: -10, approval: 8, base_enthusiasm: 10, funds: -10000 },
+            regional_effects: { midwest: 3.0, south: 2.0, northeast: 2.0, west_coast: 2.0, plains: 2.0 }
+          }
+        ]
+      },
+      {
+        id: 6,
+        phase: "campaign",
+        question: "The election campaign begins. What is the central message and kickoff strategy for your re-election bid?",
+        answers: [
+          {
+            text: "Embark on an energetic base-focused tour of coastal hubs.",
+            feedback: "High-energy rallies spike base enthusiasm and polling in the Northeast and West Coast.",
+            effects: { political_capital: 0, approval: 2, base_enthusiasm: 20, funds: -20000 },
+            regional_effects: { northeast: 4.0, west_coast: 4.0 }
+          },
+          {
+            text: "Launch a heavy television advertising campaign targeting suburban Midwest families.",
+            feedback: "Drains campaign funds but establishes a solid lead in the critical Midwest toss-up region.",
+            effects: { political_capital: 0, approval: 5, base_enthusiasm: 5, funds: -50000 },
+            regional_effects: { midwest: 6.0, south: 1.0 }
+          },
+          {
+            text: "Focus on a populist economic tour of Southern industrial towns.",
+            feedback: "Energizes rural voters and workers, making the South competitive.",
+            effects: { political_capital: 0, approval: 3, base_enthusiasm: 10, funds: -30000 },
+            regional_effects: { south: 5.0, midwest: 2.0, plains: 2.0 }
+          }
+        ]
+      },
+      {
+        id: 7,
+        phase: "campaign",
+        question: "It is Debate Night. Your opponent attacks your record on domestic issues and inflation. How do you respond?",
+        answers: [
+          {
+            text: "Launch an aggressive counter-offensive on the opponent's past lobbying records.",
+            feedback: "A fiery debate. The base is thrilled by your fighting spirit, though moderates are put off.",
+            effects: { political_capital: -5, approval: 1, base_enthusiasm: 15, funds: 0 },
+            regional_effects: { northeast: 2.0, west_coast: 2.0, south: -2.0 }
+          },
+          {
+            text: "Patiently explain the complex international factors driving inflation.",
+            feedback: "Seen as a bit academic and defensive, but wins support among college-educated suburbanites.",
+            effects: { political_capital: 10, approval: 3, base_enthusiasm: -5, funds: 0 },
+            regional_effects: { northeast: 3.0, midwest: 1.0 }
+          },
+          {
+            text: "Pivot immediately to your jobs record and focus on your infrastructure accomplishments.",
+            feedback: "A solid performance that connects well with working-class voters in key regions.",
+            effects: { political_capital: 0, approval: 5, base_enthusiasm: 8, funds: 0 },
+            regional_effects: { midwest: 4.0, south: 2.0, plains: 2.0 }
+          }
+        ]
+      },
+      {
+        id: 8,
+        phase: "campaign",
+        question: "A whistleblower leaks that a major political donor was granted a private meeting before securing a government contract. The press is in a frenzy.",
+        answers: [
+          {
+            text: "Publish all calendar records, own the mistake, and commit to transparency reforms.",
+            feedback: "Hurts short-term approval and loses donor support, but restores trust in your integrity.",
+            effects: { political_capital: 10, approval: -6, base_enthusiasm: 5, funds: -30000 },
+            regional_effects: { midwest: -2.0, northeast: 1.0, west_coast: 1.0 }
+          },
+          {
+            text: "Attack the whistleblower's credibility and denounce the report as a partisan hit job.",
+            feedback: "Your base rallies to defend you, but swing voters are repulsed. Polarization spikes.",
+            effects: { political_capital: -15, approval: -8, base_enthusiasm: 20, funds: 0 },
+            regional_effects: { plains: 2.0, south: 1.0, northeast: -4.0, west_coast: -4.0, midwest: -3.0 }
+          },
+          {
+            text: "Blanket the airwaves with positive counter-advertising showing your record of service.",
+            feedback: "Neutralizes the scandal, but consumes a large amount of campaign funds.",
+            effects: { political_capital: 0, approval: 1, base_enthusiasm: 0, funds: -60000 },
+            regional_effects: { midwest: 1.0 }
+          }
+        ]
+      },
+      {
+        id: 9,
+        phase: "campaign",
+        question: "A popular progressive third-party candidate is drawing away young voters in crucial coastal states. How will you counter them?",
+        answers: [
+          {
+            text: "Offer a major policy concession and invite their leaders to advise your climate task force.",
+            feedback: "Brings progressives back to the fold, but risks alienating fiscal moderates.",
+            effects: { political_capital: -10, approval: 2, base_enthusiasm: 15, funds: -10000 },
+            regional_effects: { west_coast: 4.0, northeast: 4.0, midwest: -2.0 }
+          },
+          {
+            text: "Ignore them and focus attacks entirely on your conservative main opponent.",
+            feedback: "Avoids elevating their profile, but the third party continues to siphon votes in safe regions.",
+            effects: { political_capital: 5, approval: -2, base_enthusiasm: -10, funds: 0 },
+            regional_effects: { west_coast: -3.0, northeast: -3.0 }
+          },
+          {
+            text: "Fund targeted attack ads highlighting the third-party candidate's lack of experience.",
+            feedback: "Successfully damages their credibility, but costs money and irritates some base voters.",
+            effects: { political_capital: 0, approval: 3, base_enthusiasm: -5, funds: -25000 },
+            regional_effects: { west_coast: 3.0, northeast: 3.0 }
+          }
+        ]
+      },
+      {
+        id: 10,
+        phase: "campaign",
+        question: "It is Election Eve. Where will you direct your campaign's final energies and remaining funds?",
+        answers: [
+          {
+            text: "Execute a massive get-out-the-vote (GOTV) drive in urban and college centers.",
+            feedback: "A massive turnout booster. Base enthusiasm surges, providing a national polling bump.",
+            effects: { political_capital: 0, approval: 3, base_enthusiasm: 25, funds: -30000 },
+            regional_effects: { northeast: 2.0, west_coast: 2.0, midwest: 2.0, south: 2.0, plains: 1.0 }
+          },
+          {
+            text: "Pour all remaining funds into negative ad blitzes in the Midwest and South.",
+            feedback: "Increases voter polarization, but chips away at the opponent's lead in critical toss-up states.",
+            effects: { political_capital: -10, approval: -3, base_enthusiasm: 10, funds: -40000 },
+            regional_effects: { midwest: 6.0, south: 5.0 }
+          },
+          {
+            text: "Deliver a nationwide televised address focused on national unity and bi-partisanship.",
+            feedback: "Increases overall national approval rating and wins over remaining undecided voters.",
+            effects: { political_capital: 15, approval: 8, base_enthusiasm: -5, funds: -20000 },
+            regional_effects: { midwest: 3.0, south: 3.0, northeast: 3.0, west_coast: 3.0, plains: 3.0 }
+          }
+        ]
+      }
+    ];
+
+    // Global Game State
+    let state = {
+      political_capital: 50,
+      approval: 48,
+      base_enthusiasm: 45,
+      funds: 150000,
+      current_turn: 1,
+      campaign_stop: null, // Stores region key if selected during turns 6-10
+      regions: {
+        northeast: { name: "Northeast", ev: 18, base_incumbent: 54.0, incumbent_pct: 54.0, path_id: "region-ne" },
+        west_coast: { name: "West Coast", ev: 21, base_incumbent: 56.0, incumbent_pct: 56.0, path_id: "region-wc" },
+        midwest: { name: "Midwest", ev: 16, base_incumbent: 49.0, incumbent_pct: 49.0, path_id: "region-mw" },
+        south: { name: "South", ev: 20, base_incumbent: 43.0, incumbent_pct: 43.0, path_id: "region-so" },
+        plains: { name: "Plains", ev: 10, base_incumbent: 38.0, incumbent_pct: 38.0, path_id: "region-pl" }
+      }
+    };
+
+    // Calculate dynamic projected vote share based on base split + approval & enthusiasm modifiers
+    function calculateProjectedVoteShare(region) {
+      // Core math: Split + Approval weight + Base enthusiasm weight
+      const approvalWeight = 0.15 * (state.approval - 50);
+      const enthusiasmWeight = 0.10 * (state.base_enthusiasm - 45);
+      return Math.max(0, Math.min(100, region.incumbent_pct + approvalWeight + enthusiasmWeight));
+    }
+
+    // Initialize Game
+    function initGame() {
+      buildTurnTracker();
+      updateDashboard();
+      updateMapColors();
+      loadScenario(1);
+    }
+
+    // Render Turn dots at top
+    function buildTurnTracker() {
+      const tracker = document.getElementById('turn-tracker');
+      tracker.innerHTML = '';
+      for (let i = 1; i <= 10; i++) {
+        const node = document.createElement('div');
+        node.className = 'turn-node';
+        node.textContent = i;
+        node.id = `turn-node-${i}`;
+        tracker.appendChild(node);
+      }
+    }
+
+    // Update statistics display, progress bars, funds counter
+    function updateDashboard() {
+      // Counter Animation for Funds
+      animateNumber('funds-display', state.funds, true);
+
+      // Stat values
+      document.getElementById('approval-val').textContent = `${state.approval}%`;
+      document.getElementById('capital-val').textContent = `${state.political_capital}/100`;
+      document.getElementById('enthusiasm-val').textContent = `${state.base_enthusiasm}%`;
+
+      // Stat bars
+      const appFill = document.getElementById('approval-bar');
+      appFill.style.width = `${state.approval}%`;
+      // Dynamic colors for Approval Rating
+      if (state.approval >= 50) {
+        appFill.style.backgroundColor = 'var(--color-success)';
+      } else if (state.approval >= 40) {
+        appFill.style.backgroundColor = 'var(--color-warning)';
+      } else {
+        appFill.style.backgroundColor = 'var(--color-danger)';
+      }
+
+      document.getElementById('capital-bar').style.width = `${state.political_capital}%`;
+      document.getElementById('enthusiasm-bar').style.width = `${state.base_enthusiasm}%`;
+
+      // Turn tracker visual classes
+      for (let i = 1; i <= 10; i++) {
+        const node = document.getElementById(`turn-node-${i}`);
+        if (!node) continue;
+        if (i < state.current_turn) {
+          node.className = 'turn-node past';
+        } else if (i === state.current_turn) {
+          node.className = 'turn-node active';
+        } else {
+          node.className = 'turn-node';
+        }
+      }
+
+      // Update Phase Badge
+      const badge = document.getElementById('phase-badge');
+      if (state.current_turn <= 5) {
+        badge.textContent = "Governing Phase";
+        badge.className = "phase-badge phase-governing";
+      } else {
+        badge.textContent = "Campaign Phase";
+        badge.className = "phase-badge phase-campaign";
+      }
+
+      // Update Projected Electoral Votes bar
+      updateElectoralProjectedEV();
+    }
+
+    // Dynamic number counting effect
+    function animateNumber(elementId, targetVal, isCurrency = false) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      const currentText = el.textContent.replace(/[^0-9-]/g, '');
+      let currentVal = parseInt(currentText) || 0;
+      
+      const duration = 400; // ms
+      const steps = 15;
+      const stepVal = Math.round((targetVal - currentVal) / steps);
+      let stepCount = 0;
+
+      const timer = setInterval(() => {
+        currentVal += stepVal;
+        stepCount++;
+        if (stepCount >= steps) {
+          currentVal = targetVal;
+          clearInterval(timer);
+        }
+        
+        if (isCurrency) {
+          el.textContent = (currentVal < 0 ? '-' : '') + '$' + Math.abs(currentVal).toLocaleString();
+        } else {
+          el.textContent = currentVal + '%';
+        }
+      }, duration / steps);
+    }
+
+    // Refresh Polling Split data rows & SVG Map fill colors
+    function updateMapColors() {
+      let playerProjectedEV = 0;
+      let opponentProjectedEV = 0;
+
+      for (const [key, region] of Object.entries(state.regions)) {
+        const pathEl = document.getElementById(region.path_id);
+        const pollTextEl = document.getElementById(`label-${region.path_id.split('-')[1]}-poll`);
+        
+        // Calculate projected share
+        const playerPct = calculateProjectedVoteShare(region);
+        const opponentPct = 100 - playerPct;
+
+        // UI splits rows updating
+        document.getElementById(`split-${region.path_id.split('-')[1]}-player`).style.width = `${playerPct}%`;
+        document.getElementById(`split-${region.path_id.split('-')[1]}-opponent`).style.width = `${opponentPct}%`;
+        document.getElementById(`num-${region.path_id.split('-')[1]}-player`).textContent = `${playerPct.toFixed(1)}%`;
+        document.getElementById(`num-${region.path_id.split('-')[1]}-opponent`).textContent = `${opponentPct.toFixed(1)}%`;
+
+        // Update SVG polling overlay text
+        if (pollTextEl) {
+          pollTextEl.textContent = `${playerPct.toFixed(0)}% - ${opponentPct.toFixed(0)}%`;
+          pollTextEl.style.fill = playerPct > opponentPct ? '#38bdf8' : '#f87171';
+        }
+
+        // Apply Gradients to SVG region paths
+        if (pathEl) {
+          let fill = '';
+          if (playerPct > 55.0) {
+            fill = 'url(#grad-strong-player)';
+          } else if (playerPct > 51.0) {
+            fill = 'url(#grad-lean-player)';
+          } else if (playerPct >= 49.0) {
+            fill = 'url(#grad-tossup)';
+          } else if (playerPct >= 45.0) {
+            fill = 'url(#grad-lean-opponent)';
+          } else {
+            fill = 'url(#grad-strong-opponent)';
+          }
+          pathEl.style.fill = fill;
+
+          // Border outlines for selected Campaign Stop
+          if (state.campaign_stop === key) {
+            pathEl.classList.add('selected-stop');
+          } else {
+            pathEl.classList.remove('selected-stop');
+          }
+        }
+      }
+
+      // Update Map Header Badge
+      const mapBadge = document.getElementById('map-phase-badge');
+      if (state.current_turn <= 5) {
+        mapBadge.textContent = "GOVERNING STATUS";
+        mapBadge.style.color = "var(--color-neutral)";
+        mapBadge.style.background = "rgba(139, 92, 246, 0.15)";
+      } else {
+        mapBadge.textContent = "CAMPAIGN STOP ACTIVE";
+        mapBadge.style.color = "var(--color-success)";
+        mapBadge.style.background = "rgba(16, 185, 129, 0.15)";
+      }
+    }
+
+    // Calculates Projected Electoral Votes splits
+    function updateElectoralProjectedEV() {
+      let playerEV = 0;
+      let opponentEV = 0;
+
+      for (const [key, region] of Object.entries(state.regions)) {
+        const playerPct = calculateProjectedVoteShare(region);
+        if (playerPct >= 50.0) {
+          playerEV += region.ev;
+        } else {
+          opponentEV += region.ev;
+        }
+      }
+
+      // Update Electoral Vote labels
+      document.getElementById('ev-proj-player').textContent = `Incumbent: ${playerEV} EV`;
+      document.getElementById('ev-proj-opponent').textContent = `Challenger: ${opponentEV} EV`;
+
+      // Update the linear bar split
+      const totalEV = 85;
+      const playerBarPct = (playerEV / totalEV) * 100;
+      const opponentBarPct = (opponentEV / totalEV) * 100;
+
+      document.getElementById('ev-bar-player').style.width = `${playerBarPct}%`;
+      document.getElementById('ev-bar-opponent').style.width = `${opponentBarPct}%`;
+    }
+
+    // Load active scenario data into interactive card
+    function loadScenario(scenarioId) {
+      if (scenarioId > 10) {
+        endGame();
+        return;
+      }
+
+      const scenario = SCENARIOS.find(s => s.id === scenarioId);
+      if (!scenario) return;
+
+      const isCampaignPhase = scenario.phase === "campaign";
+      
+      // Update Scenarios Card Header
+      document.getElementById('question-phase-lbl').textContent = 
+        isCampaignPhase ? `Campaign Scenario ${scenarioId - 5} of 5` : `Governing Scenario ${scenarioId} of 5`;
+      document.getElementById('question-text').textContent = scenario.question;
+
+      // Handle Campaign Stop Mechanics
+      const banner = document.getElementById('campaign-stop-banner');
+      const stopText = document.getElementById('campaign-stop-text');
+      
+      if (isCampaignPhase) {
+        banner.style.display = 'flex';
+        if (state.campaign_stop) {
+          const regionName = state.regions[state.campaign_stop].name;
+          stopText.innerHTML = `📍 Campaign Stop set for: <strong>${regionName}</strong> (+3.5% Polling bonus on submit). Click map to change.`;
+          banner.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+          banner.style.background = 'rgba(16, 185, 129, 0.08)';
+          banner.style.color = 'var(--color-success)';
+        } else {
+          stopText.innerHTML = `⚠️ <strong>Required:</strong> Click a region on the electoral map first to select your Campaign Stop.`;
+          banner.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+          banner.style.background = 'rgba(245, 158, 11, 0.08)';
+          banner.style.color = 'var(--color-warning)';
+        }
+      } else {
+        banner.style.display = 'none';
+        state.campaign_stop = null;
+      }
+
+      // Build Answer Choices
+      const container = document.getElementById('answers-container');
+      container.innerHTML = '';
+
+      scenario.answers.forEach((ans, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'answer-btn';
+        
+        // Disable choices if in Campaign Phase but no stop selected
+        if (isCampaignPhase && !state.campaign_stop) {
+          btn.disabled = true;
+        }
+
+        const letter = String.fromCharCode(65 + index); // A, B, C...
+        btn.innerHTML = `
+          <div class="answer-letter">${letter}</div>
+          <div style="flex-grow: 1;">${ans.text}</div>
+        `;
+
+        btn.addEventListener('mouseenter', () => {
+          if (!btn.disabled) AudioFX.playHover();
+        });
+
+        btn.addEventListener('click', () => {
+          if (!btn.disabled) selectAnswer(ans);
+        });
+
+        container.appendChild(btn);
+      });
+    }
+
+    // Handles Campaign Stop selections on SVG map click
+    function handleRegionClick(regionKey) {
+      if (state.current_turn >= 6 && state.current_turn <= 10) {
+        AudioFX.playClick();
+        state.campaign_stop = regionKey;
+        showToast(`Campaign Stop scheduled: ${state.regions[regionKey].name}`, 'success');
+        updateMapColors();
+        loadScenario(state.current_turn);
+      } else {
+        showToast(`Governing Phase: Focus is currently on federal policy, not state campaigning.`, 'info');
+      }
+    }
+
+    // Process chosen option effects
+    function selectAnswer(answer) {
+      AudioFX.playClick();
+
+      // Apply Global Effects
+      const eff = answer.effects;
+      state.political_capital = Math.max(0, Math.min(100, state.political_capital + eff.political_capital));
+      state.approval = Math.max(0, Math.min(100, state.approval + eff.approval));
+      state.base_enthusiasm = Math.max(0, Math.min(100, state.base_enthusiasm + eff.base_enthusiasm));
+      state.funds = Math.max(0, state.funds + eff.funds);
+
+      // Record logs string builder
+      let effectsString = '';
+      if (eff.approval !== 0) effectsString += `Approval ${eff.approval > 0 ? '+' : ''}${eff.approval}%  `;
+      if (eff.political_capital !== 0) effectsString += `Capital ${eff.political_capital > 0 ? '+' : ''}${eff.political_capital}  `;
+      if (eff.base_enthusiasm !== 0) effectsString += `Enthusiasm ${eff.base_enthusiasm > 0 ? '+' : ''}${eff.base_enthusiasm}%  `;
+      if (eff.funds !== 0) effectsString += `Funds ${eff.funds > 0 ? '+' : ''}$${Math.abs(eff.funds).toLocaleString()}  `;
+
+      // Apply Regional Effects
+      if (answer.regional_effects) {
+        for (const [regKey, val] of Object.entries(answer.regional_effects)) {
+          if (state.regions[regKey]) {
+            state.regions[regKey].incumbent_pct = Math.max(0, Math.min(100, state.regions[regKey].incumbent_pct + val));
+          }
+        }
+      }
+
+      // Apply Campaign Stop Polling Bonus
+      let stopString = '';
+      if (state.current_turn >= 6 && state.campaign_stop) {
+        const reg = state.regions[state.campaign_stop];
+        const stopBonus = 3.5;
+        reg.incumbent_pct = Math.max(0, Math.min(100, reg.incumbent_pct + stopBonus));
+        stopString = `\n📌 Visited ${reg.name} (+${stopBonus}% polling boost).`;
+      }
+
+      // Print to Cabinet Log
+      appendLog(state.current_turn, answer.feedback, effectsString, stopString);
+
+      // Transition Phase Audio Checks
+      if (state.current_turn === 5) {
+        setTimeout(() => {
+          AudioFX.playPhase();
+          showToast("Governing Phase ends. Campaign Phase is now ACTIVE!", "warning");
+        }, 600);
+      }
+
+      // Advance Turn
+      state.current_turn++;
+      state.campaign_stop = null; // Reset stop for next turn
+
+      // Refresh displays
+      updateDashboard();
+      updateMapColors();
+      
+      // Load next scenario
+      setTimeout(() => {
+        loadScenario(state.current_turn);
+      }, 300);
+    }
+
+    // Append to scrollable terminal log
+    function appendLog(turn, feedback, effectsText, stopText) {
+      const log = document.getElementById('history-log');
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+
+      const phaseName = turn <= 5 ? "Gov" : "Camp";
+      
+      entry.innerHTML = `
+        <span class="log-tag">[Turn ${turn} - ${phaseName}]</span> ${feedback} ${stopText ? `<em style="color:#10b981;">${stopText}</em>` : ''}
+        <span class="log-effects">${effectsText}</span>
+      `;
+
+      log.appendChild(entry);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    // End Game Calculation & Results Board
+    function endGame() {
+      // Hide scenario panel, display results panel
+      document.getElementById('interactive-panel').style.display = 'none';
+      const resPanel = document.getElementById('results-panel');
+      resPanel.style.display = 'block';
+
+      // Perform final regional votes calculations & EV splits
+      let playerFinalEV = 0;
+      let opponentFinalEV = 0;
+      const resultsData = [];
+
+      for (const [key, region] of Object.entries(state.regions)) {
+        const finalShare = calculateProjectedVoteShare(region);
+        const oppShare = 100 - finalShare;
+        const playerWon = finalShare >= 50.0;
+        
+        if (playerWon) {
+          playerFinalEV += region.ev;
+        } else {
+          opponentFinalEV += region.ev;
+        }
+
+        resultsData.push({
+          name: region.name,
+          ev: region.ev,
+          incSplit: finalShare,
+          oppSplit: oppShare,
+          winnerBadge: playerWon ? '<span class="badge-winner badge-player">INCUMBENT</span>' : '<span class="badge-winner badge-opponent">CHALLENGER</span>'
+        });
+      }
+
+      // Determine Victory
+      const victory = playerFinalEV >= 43;
+      const outcomeText = document.getElementById('results-outcome');
+      const outcomeSub = document.getElementById('results-sub');
+
+      if (victory) {
+        AudioFX.playVictory();
+        outcomeText.textContent = "VICTORY! RE-ELECTED";
+        outcomeText.className = "results-outcome outcome-win";
+        outcomeSub.innerHTML = `Congratulations! You secured <strong>${playerFinalEV}</strong> Electoral Votes, crossing the 43 EV threshold.`;
+      } else {
+        AudioFX.playDefeat();
+        outcomeText.textContent = "DEFEAT! ONE-TERM PRESIDENT";
+        outcomeText.className = "results-outcome outcome-loss";
+        outcomeSub.innerHTML = `You secured only <strong>${playerFinalEV}</strong> Electoral Votes, falling short of the required 43 EV.`;
+      }
+
+      // Populate results metrics
+      document.getElementById('res-val-ev').textContent = playerFinalEV;
+      document.getElementById('res-val-approval').textContent = `${state.approval}%`;
+      document.getElementById('res-val-enthusiasm').textContent = `${state.base_enthusiasm}%`;
+      
+      const fundsInK = Math.round(state.funds / 1000);
+      document.getElementById('res-val-funds').textContent = `$${fundsInK}K`;
+
+      // Fill summary table
+      const tbody = document.getElementById('results-table-body');
+      tbody.innerHTML = '';
+      resultsData.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${row.name}</strong></td>
+          <td>${row.ev} EV</td>
+          <td><span style="color:var(--color-player); font-weight:bold;">${row.incSplit.toFixed(1)}%</span> vs <span style="color:var(--color-opponent);">${row.oppSplit.toFixed(1)}%</span></td>
+          <td>${row.winnerBadge}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Show toast
+      showToast(victory ? "Re-election Secured!" : "Election Campaign Defeated.", victory ? "success" : "warning");
+    }
+
+    // Complete resets to restart campaign simulation
+    function restartGame() {
+      AudioFX.playClick();
+      
+      state.political_capital = 50;
+      state.approval = 48;
+      state.base_enthusiasm = 45;
+      state.funds = 150000;
+      state.current_turn = 1;
+      state.campaign_stop = null;
+      
+      // Reset regions back to initial defaults
+      for (const [key, region] of Object.entries(state.regions)) {
+        region.incumbent_pct = region.base_incumbent;
+      }
+
+      // Toggle Panels
+      document.getElementById('interactive-panel').style.display = 'flex';
+      document.getElementById('results-panel').style.display = 'none';
+
+      // Clear cabinet logs
+      const log = document.getElementById('history-log');
+      log.innerHTML = `
+        <div class="log-entry">
+          <span class="log-tag">[SYSTEM]</span> Campaign restarted. Governing phase active.
+          <span class="log-feedback">Analyze the dashboard statistics and select your first policy.</span>
+        </div>
+      `;
+
+      // Redraw everything
+      initGame();
+      showToast("Simulation restarted. Governing phase active.", "success");
+    }
+
+    // Toast Notice helper
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.innerHTML = message;
+      container.appendChild(toast);
+      
+      setTimeout(() => toast.classList.add('visible'), 50);
+      
+      setTimeout(() => {
+        toast.classList.remove('visible');
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+
+    // Tooltip dynamic content updating on mouse hovers
+    function updateTooltipContent(regionKey) {
+      const region = state.regions[regionKey];
+      if (!region) return;
+      
+      const playerPct = calculateProjectedVoteShare(region);
+      const opponentPct = 100 - playerPct;
+      const margin = playerPct - opponentPct;
+      
+      let statusText = '';
+      let statusColor = '#fff';
+      if (playerPct > 55.0) { statusText = 'Strong Incumbent'; statusColor = '#38bdf8'; }
+      else if (playerPct > 51.0) { statusText = 'Lean Incumbent'; statusColor = '#0ea5e9'; }
+      else if (playerPct >= 49.0) { statusText = 'Toss-up'; statusColor = '#a78bfa'; }
+      else if (playerPct >= 45.0) { statusText = 'Lean Challenger'; statusColor = '#f87171'; }
+      else { statusText = 'Strong Challenger'; statusColor = '#ef4444'; }
+
+      const tooltip = document.getElementById('map-tooltip');
+      tooltip.innerHTML = `
+        <div class="tooltip-header">${region.name} (${region.ev} EV)</div>
+        <div style="margin: 0.25rem 0;">Projected Split:</div>
+        <div style="font-family: var(--font-mono); font-weight: bold; font-size: 0.95rem; margin-bottom: 0.35rem;">
+          <span style="color:#38bdf8;">Incumbent ${playerPct.toFixed(1)}%</span><br>
+          <span style="color:#f87171;">Challenger ${opponentPct.toFixed(1)}%</span>
+        </div>
+        <div style="font-size:0.75rem; color: var(--text-secondary);">
+          Margin: <span style="font-weight:bold; color:${statusColor}">${statusText} (${Math.abs(margin).toFixed(1)}%)</span>
+        </div>
+        ${state.current_turn >= 6 && state.current_turn <= 10 ? 
+          `<div style="font-size:0.75rem; color:#10b981; margin-top:0.4rem; font-weight:bold; border-top:1px solid rgba(255,255,255,0.05); padding-top:0.3rem;">👉 Click to select as Campaign Stop</div>` : ''
+        }
+      `;
+    }
+
+    // Bind Event Listeners for Map Hover & Clicks
+    document.querySelectorAll('.region-path').forEach(path => {
+      const regionKey = path.dataset.regionKey;
+
+      path.addEventListener('mouseenter', (e) => {
+        AudioFX.playHover();
+        const tooltip = document.getElementById('map-tooltip');
+        tooltip.style.opacity = '1';
+        updateTooltipContent(regionKey);
+      });
+
+      path.addEventListener('mouseleave', () => {
+        document.getElementById('map-tooltip').style.opacity = '0';
+      });
+
+      path.addEventListener('mousemove', (e) => {
+        const tooltip = document.getElementById('map-tooltip');
+        const offset = 18;
+        // Keep tooltip bounds within viewport
+        let posX = e.pageX + offset;
+        let posY = e.pageY + offset;
+        
+        if (posX + 180 > window.innerWidth) {
+          posX = e.pageX - 190;
+        }
+        tooltip.style.left = posX + 'px';
+        tooltip.style.top = posY + 'px';
+      });
+
+      path.addEventListener('click', () => {
+        handleRegionClick(regionKey);
+      });
+    });
+
+    // Also bind event listeners for hover on sidebar polling rows for visual focus
+    document.querySelectorAll('.polling-row').forEach(row => {
+      const regionKey = row.dataset.region;
+      const region = state.regions[regionKey];
+      if (!region) return;
+      
+      row.addEventListener('mouseenter', () => {
+        const pathEl = document.getElementById(region.path_id);
+        if (pathEl) {
+          pathEl.style.stroke = 'rgba(255, 255, 255, 0.8)';
+          pathEl.style.filter = 'brightness(1.1)';
+        }
+      });
+
+      row.addEventListener('mouseleave', () => {
+        const pathEl = document.getElementById(region.path_id);
+        if (pathEl && state.campaign_stop !== regionKey) {
+          pathEl.style.stroke = 'rgba(255, 255, 255, 0.12)';
+          pathEl.style.filter = 'none';
+        }
+      });
+
+      row.addEventListener('click', () => {
+        handleRegionClick(regionKey);
+      });
+    });
+
+    // Run Initialization on Load
+    window.addEventListener('DOMContentLoaded', () => {
+      initGame();
+    });
+  </script>
+</body>
+</html>

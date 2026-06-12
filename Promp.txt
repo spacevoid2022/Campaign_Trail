@@ -1,0 +1,53 @@
+System Prompt: You are an expert web developer specializing in text-based strategy games. 
+Task: Create a single-file, responsive web application (HTML/CSS/JavaScript) that acts as an "Incumbent Political Simulator" inspired by The Campaign Trail.
+
+---
+
+### 1. CORE MECHANICS & ARCHITECTURE
+- Single-page application using vanilla HTML5, CSS (Tailwind CSS allowed via CDN), and modern JavaScript (ES6+).
+- The game tracks the following global state variables:
+  * Political Capital (0-100)
+  * National Approval Rating (0-100%)
+  * Base Enthusiasm (0-100%)
+  * Campaign Funds ($)
+  * Current Turn (1 to 10)
+- The UI must have three views: A Main Dashboard (Stats & History Log), a Question/Decision Panel, and a simple SVG-based electoral map or list showing 5 distinct regions with their current polling splits.
+
+---
+
+### 2. THE GAME LOOP
+The game lasts 10 turns. Turns 1-5 represent "Governing Phase." Turns 6-10 represent "Campaign Phase."
+- Each turn, the player is presented with ONE scenario question and 3-4 multi-choice answers.
+- Choosing an answer immediately updates global variables, modifies regional polling data, and prints a feedback message to a "Log."
+- After Turn 10, the game calculates final regional votes based on approval rating, base enthusiasm, and campaign stops to determine if the player wins re-election.
+
+---
+
+### 3. DATA STRUCTURE
+Implement an array of 10 Scenario Objects structured exactly like this:
+
+[
+  {
+    "id": 1,
+    "phase": "governing",
+    "question": "A sudden economic downturn has hit manufacturing. Your base wants heavy industry bailouts, but moderates demand fiscal austerity. How do you respond?",
+    "answers": [
+      {
+        "text": "Sign a massive corporate bailout and stimulus package.",
+        "feedback": "Your working-class base cheers, but fiscal conservatives turn against you.",
+        "effects": { "political_capital": -15, "approval": 5, "base_enthusiasm": 15, "funds": -50000 }
+      },
+      {
+        "text": "Implement austerity measures to curb future inflation.",
+        "feedback": "Markets stabilize, but your core voters feel betrayed.",
+        "effects": { "political_capital": 10, "approval": -10, "base_enthusiasm": -20, "funds": 25000 }
+      }
+    ]
+  }
+  // Repeat similar objects for 10 distinct, thematic questions
+]
+
+---
+
+### 4. EXPECTED OUTPUT
+Generate the complete HTML file. Ensure the JavaScript handles state management cleanly, updates the UI dynamically without page refreshes, handles the transition from Governing to Campaigning seamlessly, and provides a clear "Victory / Defeat" screen at the end based on final scores.
