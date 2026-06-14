@@ -37,7 +37,7 @@ export const CANDIDATES: Candidate[] = [
     id: 'trump', name: 'Donald J. Trump', era: 'MAGA Populist', icon: '🦅',
     bio: "The 45th President. Commands fierce loyalty and massive base enthusiasm, particularly in the South and Plains, but faces intense polarization and stiff opposition on the coasts.",
     accent: '#dc2626',
-    approval: 46, capital: 55, enthusiasm: 85, funds: 190000, legislative_support: 45,
+    approval: 46, capital: 55, enthusiasm: 85, funds: 190000, legislative_support: 55,
     regions: { northeast: 40.0, west_coast: 35.0, midwest: 51.0, south: 58.0, plains: 62.0 },
     strengths: ['PL', 'SO'], weaknesses: ['WC', 'NE']
   },

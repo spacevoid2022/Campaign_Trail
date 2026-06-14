@@ -8,33 +8,129 @@ interface Props {
   onRegionClick: (key: string) => void;
 }
 
-// Civil War era SVG map
+// Civil War era SVG map — shaped like the eastern United States
 // Region keys map to historical zones:
-//   northeast  → New England
-//   west_coast → Mid-Atlantic
-//   midwest    → Old Northwest (Ohio/Indiana/Illinois/Michigan area)
-//   plains     → Border States (KY, MO, MD, WV)
-//   south      → Deep South
+//   northeast  → New England    (ME, NH, VT, MA, RI, CT)
+//   west_coast → Mid-Atlantic   (NY, PA, NJ)
+//   midwest    → Old Northwest  (OH, IN, IL, MI, WI)
+//   plains     → Border States  (KY, MO, MD, WV, DE)
+//   south      → Deep South     (VA, NC, SC, GA, AL, MS, LA, AR, TX, TN, FL)
+
+// viewBox: "0 0 680 450"
+// Key landmarks:
+//   - Great Lakes notch at top-center (Old Northwest)
+//   - New England protruding top-right
+//   - Atlantic coast running diagonally top-right → bottom-right
+//   - Florida peninsula bottom-right
+//   - Gulf Coast sweeping bottom-left
+//   - Mississippi River / western border on the left
 
 const LINCOLN_PATHS: Record<string, string> = {
-  // New England — compact top-right cluster
-  northeast:  "M 468,22 L 640,22 L 646,100 L 468,110 Z",
-  // Mid-Atlantic — right side trapezoid (NY, PA, NJ)
-  west_coast: "M 354,28 L 468,22 L 468,110 L 428,190 L 354,190 Z",
-  // Old Northwest — large center-left block (OH, IN, IL, MI, WI)
-  midwest:    "M 30,28 L 354,28 L 354,190 L 200,232 L 30,200 Z",
-  // Border States — diagonal middle band (KY, MO, MD, WV, DE)
-  plains:     "M 200,232 L 428,190 L 468,110 L 534,190 L 540,268 L 200,268 Z",
-  // Deep South — huge bottom section
-  south:      "M 30,200 L 200,268 L 540,268 L 590,382 L 30,382 Z",
+  // New England — compact top-right corner (ME, NH, VT, MA, RI, CT)
+  northeast: [
+    "M 438,56",   // left edge near Canadian border
+    "L 578,28",   // Canadian border running right to Maine
+    "L 605,32",   // Maine tip
+    "L 624,92",   // Atlantic coast heading south
+    "L 610,130",  // Cape Cod area
+    "L 580,155",  // CT/RI coast
+    "L 516,168",  // southwestern CT
+    "L 450,168",  // NY border
+    "L 435,112",  // heading back up-left
+    "Z"
+  ].join(" "),
+
+  // Mid-Atlantic — NY, PA, NJ (right side below New England)
+  west_coast: [
+    "M 340,88",   // top-left (Upstate NY / PA border)
+    "L 438,56",   // up to New England border
+    "L 435,112",  // 
+    "L 450,168",  // 
+    "L 516,168",  //
+    "L 580,155",  //
+    "L 610,130",  //
+    "L 624,92",   //
+    "L 648,172",  // Atlantic coast heading south
+    "L 636,252",  // Delaware/MD area
+    "L 602,272",  //
+    "L 522,285",  //
+    "L 435,270",  //
+    "L 382,242",  // 
+    "L 340,88",   //
+    "Z"
+  ].join(" "),
+
+  // Old Northwest — OH, IN, IL, MI, WI (center, large block)
+  // Includes the Great Lakes "notch" — Michigan peninsula suggestion at top
+  midwest: [
+    "M 56,88",    // far left, Canada border
+    "L 140,62",   // moving right along northern border
+    "L 195,52",   // Great Lakes / Wisconsin area
+    "L 238,62",   // dip down for Great Lakes (Lake Michigan notch)
+    "L 260,48",   // back up — Upper Michigan peninsula hint
+    "L 310,55",   // coming back down
+    "L 340,88",   // right border meeting Mid-Atlantic
+    "L 382,242",  // right side going south
+    "L 320,285",  //
+    "L 200,298",  //
+    "L 98,278",   //
+    "L 56,220",   //
+    "Z"
+  ].join(" "),
+
+  // Border States — KY, MO, MD, WV, DE (diagonal middle band)
+  plains: [
+    "M 98,278",
+    "L 200,298",
+    "L 320,285",
+    "L 382,242",
+    "L 435,270",
+    "L 522,285",
+    "L 602,272",
+    "L 636,252",
+    "L 650,308",
+    "L 620,338",
+    "L 522,345",
+    "L 350,345",
+    "L 218,342",
+    "L 110,348",
+    "Z"
+  ].join(" "),
+
+  // Deep South — all Confederate states + Florida peninsula
+  south: [
+    "M 110,348",
+    "L 218,342",
+    "L 350,345",
+    "L 522,345",
+    "L 620,338",
+    "L 650,308",
+    "L 658,362",  // Atlantic coast continuing south
+    "L 648,395",  // Florida east coast
+    "L 628,428",  //
+    "L 605,445",  // Florida tip
+    "L 585,440",  //
+    "L 572,448",  // southernmost tip
+    "L 558,442",  //
+    "L 545,435",  // Florida west coast heading back up
+    "L 528,428",  //
+    "L 498,432",  // Gulf Coast swinging west
+    "L 440,440",  //
+    "L 348,438",  //
+    "L 238,432",  //
+    "L 132,418",  //
+    "L 98,392",   //
+    "L 86,360",   //
+    "Z"
+  ].join(" "),
 };
 
 const LINCOLN_LABEL_POS: Record<string, { x: number; y: number }> = {
-  northeast:  { x: 557, y: 60 },
-  west_coast: { x: 410, y: 108 },
-  midwest:    { x: 185, y: 118 },
-  plains:     { x: 372, y: 232 },
-  south:      { x: 308, y: 328 },
+  northeast:  { x: 550, y: 108 },   // center of New England
+  west_coast: { x: 530, y: 218 },   // center of Mid-Atlantic
+  midwest:    { x: 195, y: 178 },   // center of Old Northwest
+  plains:     { x: 380, y: 320 },   // center of Border States
+  south:      { x: 310, y: 405 },   // center of Deep South (avoiding Florida)
 };
 
 export const LincolnMap: React.FC<Props> = ({ state, trumpMode: _trumpMode, onRegionClick }) => {
@@ -86,7 +182,7 @@ export const LincolnMap: React.FC<Props> = ({ state, trumpMode: _trumpMode, onRe
         </div>
 
         <div className="map-svg-container">
-          <svg viewBox="0 0 680 408" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 680 458" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="grad-strong-player" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#0369a1"/><stop offset="100%" stopColor="#0284c7"/></linearGradient>
               <linearGradient id="grad-lean-player" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#0284c7"/><stop offset="100%" stopColor="#38bdf8"/></linearGradient>
@@ -97,7 +193,7 @@ export const LincolnMap: React.FC<Props> = ({ state, trumpMode: _trumpMode, onRe
             </defs>
 
             {/* Map border outline */}
-            <rect x="28" y="20" width="620" height="365" rx="6" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="1"/>
+            <rect x="50" y="20" width="618" height="428" rx="8" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="1"/>
 
             {Object.entries(state.regions).map(([key, r]) => {
               const pct = calculateProjectedVoteShare(r, state);
@@ -138,7 +234,7 @@ export const LincolnMap: React.FC<Props> = ({ state, trumpMode: _trumpMode, onRe
             })}
 
             {/* Era watermark */}
-            <text x="340" y="400" textAnchor="middle" style={{ fill: 'rgba(255,255,255,0.08)', fontSize: '0.62rem', fontFamily: 'var(--font-main)', letterSpacing: '0.15em' }}>
+            <text x="340" y="452" textAnchor="middle" style={{ fill: 'rgba(255,255,255,0.08)', fontSize: '0.62rem', fontFamily: 'var(--font-main)', letterSpacing: '0.15em' }}>
               UNITED STATES OF AMERICA · 1864
             </text>
           </svg>

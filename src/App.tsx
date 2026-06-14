@@ -60,6 +60,7 @@ export default function App() {
     });
 
     setState(newState);
+    setTrumpMode(c.id === 'trump');
     setPhase('governing');
     showToast(`Now running as ${c.name}. Good luck, Mr. President!`, 'success');
   };
@@ -158,13 +159,14 @@ export default function App() {
     // Low approval
     let apathyStr = '';
     if (nextState.approval < 40) {
-      nextState.base_enthusiasm = Math.max(0, nextState.base_enthusiasm - 1.5);
-      apathyStr = ` <br/><span style="color:var(--color-warning);font-size:0.75rem;">📉 Low-approval apathy: Enthusiasm -1.5%.</span>`;
+      const drain = trumpMode ? 0.3 : 1.5;
+      nextState.base_enthusiasm = Math.max(0, nextState.base_enthusiasm - drain);
+      apathyStr = ` <br/><span style="color:var(--color-warning);font-size:0.75rem;">📉 Low-approval apathy: Enthusiasm -${drain}%.</span>`;
     }
 
     // Campaign stop
     let stopStr = '';
-    if (nextState.current_turn >= 6 && nextState.campaign_stop) {
+    if (nextState.current_turn >= 7 && nextState.campaign_stop) {
       const reg = nextState.regions[nextState.campaign_stop];
       let bonus = 2.0 + 3.0 * (nextState.approval / 50);
       if (!nextState.congress_controlled) bonus *= 0.8;
@@ -172,19 +174,19 @@ export default function App() {
       stopStr = `<br/>📌 Visited ${reg.name} (+${bonus.toFixed(1)}% polling).`;
     }
 
-    const p = nextState.current_turn <= 5 ? 'Gov' : 'Camp';
+    const p = nextState.current_turn <= 6 ? 'Gov' : 'Camp';
     addLog(
       `<span style="color:var(--color-player)">[T${nextState.current_turn}-${p}]</span> ${answer.feedback}${apathyStr}${trumpStr}${stopStr ? `<br/><em style="color:#10b981;">${stopStr}</em>` : ''}<br/><span style="color:var(--color-success);font-size:0.74rem;">${effectsStr}</span>`
     );
 
-    if (nextState.political_capital === 0 && nextState.current_turn <= 5) {
+    if (nextState.political_capital === 0 && nextState.current_turn <= 6) {
       nextState.primary_challenged = true;
       showToast("⚠️ Political Capital ZERO! Primary challenger mobilizing!", "warning");
       AudioFX.playAlert();
     }
 
-    if (nextState.current_turn === 5 && !nextState.primary_challenged) {
-      nextState.current_turn = 6;
+    if (nextState.current_turn === 6 && !nextState.primary_challenged) {
+      nextState.current_turn = 7;
       nextState.campaign_stop = null;
       nextState.congress_controlled = nextState.legislative_support >= 50;
       nextState = checkAlienation(nextState, true);
@@ -203,13 +205,13 @@ export default function App() {
     nextState = checkAlienation(nextState, true);
     setState(nextState);
 
-    if (nextState.current_turn > 10) {
+    if (nextState.current_turn > 12) {
       setPhase('results');
     }
   };
 
   const handleRegionClick = (key: string) => {
-    if (state.current_turn >= 6 && state.current_turn <= 10 && phase === 'campaign') {
+    if (state.current_turn >= 7 && state.current_turn <= 12 && phase === 'campaign') {
       AudioFX.playClick();
       setState(s => ({ ...s, campaign_stop: key as keyof Regions }));
       const sf = state.approval / 50;
@@ -217,7 +219,7 @@ export default function App() {
       if (!state.congress_controlled) bonus *= 0.8;
       showToast(`Campaign Stop: ${state.regions[key as keyof Regions].name} (+${bonus.toFixed(1)}% polling)`, 'success');
     } else {
-      showToast(`Governing Phase — campaign stops unlock at Turn 6.`, 'info');
+      showToast(`Governing Phase — campaign stops unlock at Turn 7.`, 'info');
     }
   };
 
@@ -315,11 +317,11 @@ export default function App() {
         <div className="game-board">
           {phase !== 'results' && (
             <div className="game-phase-bar">
-              <div className={`phase-badge ${state.current_turn <= 5 ? 'phase-governing' : 'phase-campaign'}`}>
-                {state.current_turn <= 5 ? 'Governing Phase' : 'Campaign Phase'}
+              <div className={`phase-badge ${state.current_turn <= 6 ? 'phase-governing' : 'phase-campaign'}`}>
+                {state.current_turn <= 6 ? 'Governing Phase' : 'Campaign Phase'}
               </div>
               <div className="turn-tracker">
-                {Array.from({ length: 10 }).map((_, i) => (
+                {Array.from({ length: 12 }).map((_, i) => (
                   <div key={i} className={`turn-node ${i + 1 < state.current_turn ? 'past' : i + 1 === state.current_turn ? 'active' : ''}`}>{i + 1}</div>
                 ))}
               </div>

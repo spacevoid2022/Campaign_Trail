@@ -12,7 +12,7 @@ export const ScenarioCard: React.FC<Props> = ({ scenario, state, trumpMode, onAn
   if (!scenario && !state.primary_challenged) return null;
 
   const isCampaign = scenario?.phase === 'campaign';
-  let phaseLabel = isCampaign ? `Campaign Scenario ${scenario!.id - 5} of 5` : `Governing Scenario ${scenario?.id || ''} of 5`;
+  let phaseLabel = isCampaign ? `Campaign Scenario ${scenario!.id - 6} of 6` : `Governing Scenario ${scenario?.id || ''} of 6`;
   let questionText = scenario?.question;
   let answers = scenario?.answers || [];
 

@@ -44,10 +44,10 @@ export const Dashboard: React.FC<Props> = ({ state, logs, onBullyPulpit }) => {
         </div>
         <button 
           className="btn-bully" 
-          disabled={state.bully_pulpit_used || state.current_turn > 5}
+          disabled={state.bully_pulpit_used || state.current_turn > 6}
           onClick={onBullyPulpit}
         >
-          {state.bully_pulpit_used ? '🎙️ Bully Pulpit Used' : state.current_turn > 5 ? '🎙️ Campaign Mode Active' : '🎙️ Use Bully Pulpit'}
+          {state.bully_pulpit_used ? '🎙️ Bully Pulpit Used' : state.current_turn > 6 ? '🎙️ Campaign Mode Active' : '🎙️ Use Bully Pulpit'}
         </button>
       </div>
       <div className="history-log-wrapper">
