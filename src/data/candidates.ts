@@ -73,5 +73,21 @@ export const CANDIDATES: Candidate[] = [
     regions: { northeast: 72.0, west_coast: 53.0, midwest: 55.0, south: 28.0, plains: 42.0 },
     strengths: ['NE', 'MW'], weaknesses: ['SO'],
     mapId: 'lincoln'
+  },
+  {
+    id: 'gwbush', name: 'George W. Bush', era: 'Post-9/11 War on Terror', icon: '🤠',
+    bio: "The 'Decider.' Ascended to the presidency during a period of relative calm, only to be defined by the 9/11 attacks. Commands massive patriotic fervor and bipartisan support early on, but faces deep regional skepticism over his neoconservative foreign policy.",
+    accent: '#b91c1c',
+    approval: 55, capital: 75, enthusiasm: 65, funds: 180000, legislative_support: 60,
+    regions: { northeast: 42.0, west_coast: 38.0, midwest: 50.0, south: 62.0, plains: 65.0 },
+    strengths: ['PL', 'SO'], weaknesses: ['WC', 'NE']
+  },
+  {
+    id: 'reagan', name: 'Ronald Reagan', era: 'The Reagan Revolution', icon: '🎬',
+    bio: "The Great Communicator. A master of the bully pulpit who reshaped the American economy and foreign policy. His optimism and 'Morning in America' messaging give him broad national appeal, though his economic policies polarize the industrial heartland.",
+    accent: '#991b1b',
+    approval: 54, capital: 65, enthusiasm: 80, funds: 210000, legislative_support: 62,
+    regions: { northeast: 50.0, west_coast: 52.0, midwest: 54.0, south: 60.0, plains: 64.0 },
+    strengths: ['PL', 'SO', 'MW'], weaknesses: ['NE']
   }
 ];

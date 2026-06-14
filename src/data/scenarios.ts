@@ -1060,6 +1060,227 @@ export const SCENARIOS: Scenario[] = [
       { text: "A primetime closing speech from the Golden Gate Bridge — California as America's symbol of possibility.", feedback: "The visuals are spectacular. The message is aspirational. National press covers it as the image of the campaign.", effects: { political_capital: 10, approval: 5, base_enthusiasm: 15, funds: -20000 }, regional_effects: { west_coast: 6.0, northeast: 5.0, midwest: 3.0, south: 3.0, plains: 2.0 } }
     ]
   },
+
+  // ─── GEORGE W. BUSH SCENARIOS ──────────────────────────────────────────────
+  {
+    id: 1, phase: "governing", candidate_id: "gwbush",
+    question: "September 11, 2001. The world has changed forever. You are in a classroom in Florida when you receive the news. The nation is in shock. How do you respond to the greatest crisis of your presidency?",
+    answers: [
+      { text: "Fly to Ground Zero immediately — take a bullhorn and speak to the rescue workers and the nation.", feedback: "The bullhorn moment becomes the defining image of your presidency. 'I can hear you! The rest of the world hears you!' Approval ratings soar to record heights.", effects: { political_capital: 20, approval: 20, base_enthusiasm: 25, funds: 0 }, regional_effects: { northeast: 8.0, midwest: 6.0, south: 5.0, plains: 5.0, west_coast: 4.0 }, legislative_effects: 10 },
+      { text: "Address the nation from the Oval Office with calm, measured resolve — focus on security and the hunt for the perpetrators.", feedback: "A steady, presidential performance that reassures a frightened public. You project strength and stability during the initial chaos.", effects: { political_capital: 10, approval: 12, base_enthusiasm: 10, funds: 0 }, regional_effects: { northeast: 4.0, midwest: 4.0 }, legislative_effects: 5 },
+      { text: "Declare a National State of Emergency and immediately ground all civilian aircraft nationwide.", feedback: "A necessary security measure that prevents further attacks but highlights the vulnerability of the nation. The public is tense but compliant.", effects: { political_capital: 5, approval: 5, base_enthusiasm: 5, funds: -10000 }, regional_effects: { northeast: 2.0 }, legislative_effects: 2 }
+    ]
+  },
+  {
+    id: 2, phase: "governing", candidate_id: "gwbush",
+    question: "In your State of the Union address, you identify an 'Axis of Evil' — North Korea, Iran, and Iraq — as regimes that support terror and seek weapons of mass destruction. How aggressively do you pursue this doctrine?",
+    answers: [
+      { text: "The Bush Doctrine: Proclaim that the U.S. will take preemptive action against any regime that threatens us with WMDs.", feedback: "Your base and hawks are electrified by the boldness. But the international community and domestic critics warn of endless war.", effects: { political_capital: -5, approval: -2, base_enthusiasm: 20, funds: -20000 }, regional_effects: { plains: 5.0, south: 5.0, west_coast: -4.0, northeast: -4.0 }, legislative_effects: -4 },
+      { text: "Focus primarily on diplomatic isolation and sanctions while building a broad international coalition for any future action.", feedback: "Moderates and allies are relieved by the caution. Your base, however, feels you are losing the momentum of the post-9/11 surge.", effects: { political_capital: 10, approval: 4, base_enthusiasm: -10, funds: 0 }, regional_effects: { northeast: 3.0, west_coast: 3.0, midwest: 2.0 }, legislative_effects: 6 },
+      { text: "Target only the immediate threat in Afghanistan while keeping other 'Axis' states under strict intelligence surveillance.", feedback: "A focused approach that avoids overextension, though critics call it 'half-measures' in the face of global terror.", effects: { political_capital: 5, approval: 5, base_enthusiasm: 5, funds: -10000 }, regional_effects: { midwest: 2.0, northeast: 2.0 }, legislative_effects: 4 }
+    ]
+  },
+  {
+    id: 3, phase: "governing", candidate_id: "gwbush",
+    question: "Intelligence reports suggest Saddam Hussein is hiding WMDs and has ties to Al-Qaeda. You are considering a full-scale invasion of Iraq to remove him from power. The UN is divided. What is your decision?",
+    answers: [
+      { text: "Go in with a 'Coalition of the Willing' — invade Iraq to disarm the regime and spread democracy in the Middle East.", feedback: "The invasion begins with a 'Shock and Awe' campaign. Saddam is toppled quickly, but no WMDs are found, and a long insurgency begins.", effects: { political_capital: -20, approval: -5, base_enthusiasm: 25, funds: -50000 }, regional_effects: { south: 6.0, plains: 6.0, northeast: -7.0, west_coast: -7.0, midwest: -3.0 }, legislative_effects: -8 },
+      { text: "Demand a final round of UN inspections with a strict deadline for compliance or face military action.", feedback: "Delays the war but maintains international legitimacy. Saddam's stalling tactics continue to frustrate your administration and the base.", effects: { political_capital: 10, approval: 2, base_enthusiasm: -15, funds: -10000 }, regional_effects: { midwest: 2.0, northeast: 2.0 }, legislative_effects: 5 },
+      { text: "Focus entirely on the war in Afghanistan and Al-Qaeda, postponing any move against Iraq for the foreseeable future.", feedback: "Avoids the Iraq quagmire entirely. Your base feels you let a major threat off the hook, but you maintain higher national approval.", effects: { political_capital: 5, approval: 8, base_enthusiasm: -10, funds: 20000 }, regional_effects: { northeast: 4.0, west_coast: 4.0, midwest: 3.0 }, legislative_effects: 4 }
+    ]
+  },
+  {
+    id: 4, phase: "governing", candidate_id: "gwbush",
+    question: "You want to pass a massive tax cut to stimulate the economy and return the budget surplus to the people. Democrats call it a giveaway to the rich. How do you pass your signature economic plan?",
+    answers: [
+      { text: "Push the full 'Bush Tax Cuts' through Congress — $1.35 trillion in cuts for everyone, including the top bracket.", feedback: "The cuts pass! The base is ecstatic, and consumer spending rises. But the national debt begins to climb rapidly.", effects: { political_capital: -15, approval: 3, base_enthusiasm: 22, funds: -40000 }, regional_effects: { plains: 5.0, south: 5.0, midwest: 3.0, northeast: -2.0 }, legislative_effects: 10 },
+      { text: "Limit the tax cuts to middle and lower-income families to win over moderate Democrats.", feedback: "A bipartisan win that stabilizes your approval. Your conservative base is disappointed that you left the supply-side edge behind.", effects: { political_capital: 15, approval: 5, base_enthusiasm: -12, funds: 0 }, regional_effects: { midwest: 4.0, northeast: 2.0 }, legislative_effects: 8 },
+      { text: "Couple the tax cuts with a massive expansion of Medicare to include prescription drug coverage (Part D).", feedback: "Hugely popular with seniors and moderates, but your fiscal conservative base is horrified by the new entitlement spending.", effects: { political_capital: -10, approval: 8, base_enthusiasm: 5, funds: -20000 }, regional_effects: { midwest: 5.0, south: 4.0, northeast: 4.0, west_coast: 4.0, plains: 3.0 }, legislative_effects: 6 }
+    ]
+  },
+  {
+    id: 5, phase: "governing", candidate_id: "gwbush",
+    question: "You've proposed 'No Child Left Behind' — a sweeping education reform that mandates standardized testing and holds schools accountable. Teachers' unions and states' rights advocates are both wary.",
+    answers: [
+      { text: "Push for the full bill with federal oversight and strict penalties for failing schools.", feedback: "NCLB becomes law with significant bipartisan support. It reshapes American education, but the 'teaching to the test' backlash begins.", effects: { political_capital: -10, approval: 4, base_enthusiasm: 8, funds: -10000 }, regional_effects: { midwest: 3.0, northeast: 3.0, south: 2.0 }, legislative_effects: 9 },
+      { text: "Compromise to allow states more flexibility in designing their own standards and testing schedules.", feedback: "The bill passes easily but its impact is diluted. Both parties claim victory, but education advocates say it lacks teeth.", effects: { political_capital: 5, approval: 2, base_enthusiasm: -5, funds: 0 }, regional_effects: { plains: 1.0, south: 1.0 }, legislative_effects: 5 },
+      { text: "Focus education reform entirely on school vouchers and private choice rather than federal mandates.", feedback: "Electrifies your conservative base but the bill dies in a Senate filibuster. You are left with no major education win.", effects: { political_capital: -20, approval: -4, base_enthusiasm: 20, funds: 0 }, regional_effects: { plains: 4.0, south: 4.0, northeast: -3.0, west_coast: -3.0 }, legislative_effects: -10 }
+    ]
+  },
+  {
+    id: 6, phase: "governing", candidate_id: "gwbush",
+    question: "Hurricane Katrina has devastated the Gulf Coast. New Orleans is underwater. The federal response is being criticized as slow and disorganized. The nation is watching. What is your move?",
+    answers: [
+      { text: "Fly to the region immediately and personally oversee the rescue operations from the ground.", feedback: "A hands-on response that helps repair the image of federal competence. You fire the FEMA director on the spot. Approval stabilizes.", effects: { political_capital: -5, approval: 2, base_enthusiasm: 10, funds: -30000 }, regional_effects: { south: 5.0, midwest: 2.0, plains: 2.0 } },
+      { text: "Coordinate the response from Washington while ordering the military to take over all logistics and security.", feedback: "Efficient but distant. The image of you looking at the destruction from Air Force One becomes a symbol of detachment.", effects: { political_capital: 10, approval: -6, base_enthusiasm: -15, funds: -20000 }, regional_effects: { south: -5.0, northeast: -2.0, west_coast: -2.0 }, legislative_effects: -5 },
+      { text: "Announce a massive federal reconstruction fund — the 'Gulf Coast Recovery Act' — to rebuild the region entirely.", feedback: "A bold financial commitment that focuses on the future, but does nothing to solve the immediate humanitarian disaster.", effects: { political_capital: -20, approval: -2, base_enthusiasm: 5, funds: -60000 }, regional_effects: { south: 3.0, midwest: 1.0 } }
+    ]
+  },
+  {
+    id: 7, phase: "campaign", candidate_id: "gwbush",
+    question: "Your re-election campaign kicks off. Your opponent is attacking your handling of the Iraq War and the economy. What is the central message of your campaign?",
+    answers: [
+      { text: "Stay the Course: Frame the election as a choice of resolve in the War on Terror. You are the steady hand.", feedback: "A powerful message of strength that resonates with 'Security Moms' and the base. You paint the opponent as a 'flip-flopper.'", effects: { political_capital: 0, approval: 3, base_enthusiasm: 20, funds: -30000 }, regional_effects: { plains: 5.0, south: 5.0, midwest: 3.0, northeast: -2.0 } },
+      { text: "Compassionate Conservatism: Highlight your education and Medicare wins to win over suburban moderates.", feedback: "Broadens your appeal and protects you in the Midwest, but dampens the enthusiast edge your base expects in wartime.", effects: { political_capital: 10, approval: 5, base_enthusiasm: -5, funds: -40000 }, regional_effects: { midwest: 5.0, northeast: 2.0, south: 1.0 } },
+      { text: "Faith-Based Initiative: Focus on social issues and your judicial record to fire up the evangelical base.", feedback: "Evangelical turnout is projected to be record-breaking. You secure the 'Red' states but alienate secular voters on the coasts.", effects: { political_capital: 0, approval: -1, base_enthusiasm: 25, funds: -20000 }, regional_effects: { plains: 6.0, south: 6.0, northeast: -4.0, west_coast: -5.0 } }
+    ]
+  },
+  {
+    id: 8, phase: "campaign", candidate_id: "gwbush",
+    question: "The opponent is John Kerry, a decorated Vietnam veteran. A group called 'Swift Boat Veterans for Truth' has released ads questioning his war record. How does your campaign handle this controversy?",
+    answers: [
+      { text: "Quietly allow the ads to run while your campaign maintains a focus on Kerry's Senate voting record.", feedback: "The ads effectively damage Kerry's greatest strength — his war record — without you getting your hands dirty. Brutally effective.", effects: { political_capital: -5, approval: 2, base_enthusiasm: 15, funds: 0 }, regional_effects: { plains: 4.0, south: 4.0, midwest: 3.0 } },
+      { text: "Publicly distance yourself from the ads and call for a focus on the issues of today.", feedback: "A high-road move that wins praise for presidential conduct, but allows Kerry to maintain his war hero narrative.", effects: { political_capital: 10, approval: 4, base_enthusiasm: -10, funds: 0 }, regional_effects: { northeast: 3.0, west_coast: 3.0 } },
+      { text: "Attack Kerry's Senate record as 'more liberal than Ted Kennedy' to shift the focus to ideology.", feedback: "Successfully paints Kerry as out-of-touch with the mainstream. The 'liberal' label sticks in the Midwest and South.", effects: { political_capital: 0, approval: 3, base_enthusiasm: 12, funds: -20000 }, regional_effects: { midwest: 4.0, south: 3.0, plains: 2.0 } }
+    ]
+  },
+  {
+    id: 9, phase: "campaign", candidate_id: "gwbush",
+    question: "Social issues are defining the campaign. A push for a Federal Marriage Amendment is gathering steam. Where do you stand?",
+    answers: [
+      { text: "Endorse the Federal Marriage Amendment — define marriage as between one man and one woman.", feedback: "Electrifies your socially conservative base in the South and Plains. It becomes a massive turnout driver on election day.", effects: { political_capital: -10, approval: -2, base_enthusiasm: 30, funds: 0 }, regional_effects: { plains: 7.0, south: 6.0, northeast: -6.0, west_coast: -6.0, midwest: 2.0 } },
+      { text: "Support civil unions but state that marriage should be left to the states to decide.", feedback: "A moderate middle ground that avoids the worst of the coastal backlash but fails to fire up the evangelical base.", effects: { political_capital: 5, approval: 3, base_enthusiasm: -5, funds: 0 }, regional_effects: { midwest: 2.0, northeast: 1.0 } },
+      { text: "Pivot to your judicial appointments — promise to appoint more conservative judges like Scalia and Thomas.", feedback: "A brilliant move that unites all wings of the party. The base is happy, and the focus stays on the courts rather than the amendment.", effects: { political_capital: 0, approval: 4, base_enthusiasm: 15, funds: 0 }, regional_effects: { plains: 4.0, south: 4.0, midwest: 2.0 } }
+    ]
+  },
+  {
+    id: 10, phase: "campaign", candidate_id: "gwbush",
+    question: "The War in Iraq is entering its second year. No WMDs have been found. The opponent is calling it a 'wrong war, at the wrong time.' How do you respond in the debates?",
+    answers: [
+      { text: "Double down: 'The world is better off without Saddam Hussein.' Reiterate that the intelligence was shared by all.", feedback: "Your resolve is your greatest asset. Supporters see a leader who doesn't blink; critics see a leader who won't admit a mistake.", effects: { political_capital: -5, approval: 0, base_enthusiasm: 22, funds: 0 }, regional_effects: { plains: 5.0, south: 5.0, west_coast: -5.0, northeast: -4.0 } },
+      { text: "Pivot to the broader War on Terror — frame Iraq as just one front in a global struggle for freedom.", feedback: "Effectively broadens the context and makes the war seem more essential. The security message holds in the swing states.", effects: { political_capital: 0, approval: 3, base_enthusiasm: 15, funds: 0 }, regional_effects: { midwest: 4.0, south: 3.0, plains: 2.0 } },
+      { text: "Admit the intelligence was flawed but argue that Kerry's own vote for the war makes him unfit to lead.", feedback: "A tactical counter-attack that successfully labels Kerry a 'flip-flopper.' If he was wrong then, how can we trust him now?", effects: { political_capital: 5, approval: 1, base_enthusiasm: 10, funds: 0 }, regional_effects: { midwest: 3.0, south: 2.0 } }
+    ]
+  },
+  {
+    id: 11, phase: "campaign", candidate_id: "gwbush",
+    question: "Election Eve. The map is deeply polarized. Everything comes down to Ohio. Where do you hold your final rally?",
+    answers: [
+      { text: "A massive 'Victory' rally in Columbus, Ohio — 'Freedom is on the march!'", feedback: "The enthusiasm in Ohio is palpable. You drive turnout to its absolute limit in the rural counties and suburbs.", effects: { political_capital: 0, approval: 2, base_enthusiasm: 25, funds: -30000 }, regional_effects: { midwest: 7.0, plains: 3.0, south: 2.0 } },
+      { text: "A multi-state blitz through Ohio, Florida, and Iowa — the 'Heartland' tour.", feedback: "You secure a broad electoral college floor. Florida and Iowa look safe, while Ohio remains a knife-edge toss-up.", effects: { political_capital: 5, approval: 4, base_enthusiasm: 15, funds: -40000 }, regional_effects: { midwest: 4.0, south: 5.0, plains: 4.0 } },
+      { text: "A primetime address from your ranch in Crawford, Texas — a message of humble strength and faith.", feedback: "The 'authenticity' play. It shores up the base across the entire country but fails to provide the targeted boost in Ohio.", effects: { political_capital: 10, approval: 5, base_enthusiasm: 10, funds: -20000 }, regional_effects: { plains: 5.0, south: 4.0, midwest: 2.0 } }
+    ]
+  },
+  {
+    id: 12, phase: "campaign", candidate_id: "gwbush",
+    question: "Election Night. The results are trickling in. You've won the South and the Plains. Florida is yours. It all comes down to Ohio once again. What is your final move?",
+    answers: [
+      { text: "Deploy your legal and ground teams to every precinct in Ohio to monitor the count and challenge provisional ballots.", feedback: "A repeat of the 2000 focus. Your team is ready for a long fight. Eventually, the margin in Ohio holds for you.", effects: { political_capital: 0, approval: 3, base_enthusiasm: 10, funds: -25000 }, regional_effects: { midwest: 4.0, south: 2.0 } },
+      { text: "Wait for the count to finish and address the nation from the White House with quiet confidence.", feedback: "A presidential posture that contrasts with the chaos of the night. When Ohio is finally called, you have the moral high ground.", effects: { political_capital: 10, approval: 5, base_enthusiasm: 5, funds: 0 }, regional_effects: { northeast: 3.0, midwest: 3.0 } },
+      { text: "Call the opponent and demand he concede once the math in Ohio becomes clear.", feedback: "A bold move that forces the narrative. Kerry concedes by morning, avoiding a repeat of the 2000 recount drama.", effects: { political_capital: 5, approval: 2, base_enthusiasm: 15, funds: 0 }, regional_effects: { south: 2.0, plains: 2.0 } }
+    ]
+  },
+
+  // ─── RONALD REAGAN SCENARIOS ──────────────────────────────────────────────
+  {
+    id: 1, phase: "governing", candidate_id: "reagan",
+    question: "The economy is in 'stagflation' — high inflation and low growth. You've proposed 'Reaganomics,' a supply-side plan of massive tax cuts, deregulation, and spending cuts. How aggressively do you push your agenda?",
+    answers: [
+      { text: "The full supply-side package: 25% across-the-board income tax cuts over three years.", feedback: "The 'Economic Recovery Tax Act' passes! The base is ecstatic. Inflation begins to drop as the Fed tightens, but the deficit begins to balloon.", effects: { political_capital: -10, approval: 4, base_enthusiasm: 25, funds: -40000 }, regional_effects: { plains: 5.0, south: 5.0, midwest: 4.0, northeast: -2.0, west_coast: -2.0 }, legislative_effects: 10 },
+      { text: "A moderate version of the tax cuts, coupled with bipartisan Social Security reform.", feedback: "A stabilized economic approach that wins over 'Boll Weevil' Democrats. It lacks the supply-side punch but maintains broad approval.", effects: { political_capital: 15, approval: 6, base_enthusiasm: -10, funds: 0 }, regional_effects: { midwest: 3.0, northeast: 3.0 }, legislative_effects: 8 },
+      { text: "Focus primarily on deregulation and cutting federal agencies while keeping tax rates stable for now.", feedback: "Business leaders are happy, but the 'revolution' feels stalled. Your base is restless for the promised tax relief.", effects: { political_capital: 5, approval: 2, base_enthusiasm: -15, funds: 10000 }, regional_effects: { south: 2.0 }, legislative_effects: 5 }
+    ]
+  },
+  {
+    id: 2, phase: "governing", candidate_id: "reagan",
+    question: "The air traffic controllers' union (PATCO) has gone on an illegal strike, demanding higher pay and shorter hours. They expect you, a former union president, to negotiate. What is your response?",
+    answers: [
+      { text: "Fire them all. Give them 48 hours to return to work or they are banned from federal service for life.", feedback: "A stunning display of resolve. You break the strike and the union. Business leaders cheer your strength; labor leaders are horrified.", effects: { political_capital: 10, approval: 5, base_enthusiasm: 20, funds: 0 }, regional_effects: { plains: 6.0, south: 5.0, midwest: -4.0, northeast: -3.0 }, legislative_effects: 5 },
+      { text: "Enter into secret negotiations to find a compromise that avoids a total shutdown of air travel.", feedback: "Avoids the drama but you appear weak to your base. The strike lingers, causing economic disruption and damaging your 'strong leader' image.", effects: { political_capital: -15, approval: -4, base_enthusiasm: -15, funds: -10000 }, regional_effects: { midwest: -2.0, south: -2.0 }, legislative_effects: -5 },
+      { text: "Request a court injunction to force them back to work while the labor board mediates the dispute.", feedback: "The 'law and order' approach. It's technically correct but lacks the symbolic power of a decisive presidential action.", effects: { political_capital: 5, approval: 2, base_enthusiasm: 5, funds: 0 }, regional_effects: { midwest: 1.0 }, legislative_effects: 2 }
+    ]
+  },
+  {
+    id: 3, phase: "governing", candidate_id: "reagan",
+    question: "The Soviet Union is the 'Evil Empire.' You want to shift from the doctrine of 'Containment' to a policy of 'Peace Through Strength,' including the Strategic Defense Initiative (SDI) — 'Star Wars.'",
+    answers: [
+      { text: "Launch SDI: Announce a space-based shield that will make nuclear weapons 'impotent and obsolete.'", feedback: "The Soviets are panicked by the technological challenge. Your base loves the vision. Critics call it a dangerous fantasy.", effects: { political_capital: -10, approval: 3, base_enthusiasm: 25, funds: -50000 }, regional_effects: { west_coast: 5.0, northeast: 2.0, south: 4.0, plains: 4.0 }, legislative_effects: -6 },
+      { text: "Focus on a massive conventional military buildup — the 600-ship Navy and modernized land forces.", feedback: "A tangible display of strength that creates thousands of jobs in the Sun Belt and Midwest. It avoids the 'Star Wars' controversy.", effects: { political_capital: 5, approval: 6, base_enthusiasm: 15, funds: -30000 }, regional_effects: { south: 5.0, west_coast: 4.0, midwest: 4.0 }, legislative_effects: 6 },
+      { text: "Pursue aggressive arms control negotiations while maintaining existing nuclear parity.", feedback: "The 'detente' approach. Reassures a nervous world but your 'New Right' base feels you are repeating the mistakes of the 70s.", effects: { political_capital: 10, approval: 5, base_enthusiasm: -15, funds: 0 }, regional_effects: { northeast: 4.0, west_coast: 3.0 }, legislative_effects: 4 }
+    ]
+  },
+  {
+    id: 4, phase: "governing", candidate_id: "reagan",
+    question: "Drug use is rising in American cities. You want to launch a national 'War on Drugs,' and Nancy wants to champion the 'Just Say No' campaign. How much federal power do you commit?",
+    answers: [
+      { text: "Full Mobilization: Sign the Anti-Drug Abuse Act, creating mandatory minimums and the 'Drug Czar' position.", feedback: "The 'Just Say No' era begins. Approval with parents and suburbs sky-rockets. But the prison population begins a long, steep climb.", effects: { political_capital: 5, approval: 8, base_enthusiasm: 10, funds: -15000 }, regional_effects: { midwest: 4.0, south: 4.0, plains: 4.0, northeast: 2.0, west_coast: 2.0 }, legislative_effects: 8 },
+      { text: "Focus entirely on the cultural campaign — let Nancy lead the 'Just Say No' messaging without new laws.", feedback: "The message is popular and non-partisan, but critics across the aisle call it a 'PR stunt' that lacks the teeth to stop the cartels.", effects: { political_capital: 10, approval: 4, base_enthusiasm: 5, funds: 0 }, regional_effects: { midwest: 2.0, northeast: 2.0 }, legislative_effects: 4 },
+      { text: "Target only the supply side — use the military and Coast Guard to interdict drugs at the border.", feedback: "A popular 'America First' approach to security, but it fails to address the rising demand in American cities.", effects: { political_capital: 0, approval: 2, base_enthusiasm: 12, funds: -20000 }, regional_effects: { south: 3.0, west_coast: 2.0, plains: 2.0 }, legislative_effects: 2 }
+    ]
+  },
+  {
+    id: 5, phase: "governing", candidate_id: "reagan",
+    question: "Social Security is facing a funding crisis. If you don't act, benefits will be cut. You need a bipartisan compromise with Tip O'Neill's Democrats. What are you willing to trade?",
+    answers: [
+      { text: "The Grand Compromise: Raise the retirement age slowly and accept modest payroll tax increases in exchange for stability.", feedback: "A historic bipartisan win. You and Tip O'Neill 'save' Social Security for a generation. Your base grumbles about the tax hike, but the issue is gone.", effects: { political_capital: 15, approval: 6, base_enthusiasm: -10, funds: 0 }, regional_effects: { midwest: 4.0, northeast: 3.0, south: 2.0, plains: 2.0, west_coast: 2.0 }, legislative_effects: 10 },
+      { text: "Push for partial privatization — allow workers to invest a portion of their taxes into private accounts.", feedback: "Electrifies your conservative base but the Democrats kill it immediately. The crisis lingers, and your approval with seniors drops.", effects: { political_capital: -20, approval: -6, base_enthusiasm: 20, funds: 0 }, regional_effects: { plains: 4.0, south: 3.0, midwest: -4.0, northeast: -4.0 }, legislative_effects: -10 },
+      { text: "Refuse any tax increases and demand that all solvency come from benefit cuts for future retirees.", feedback: "A principled stand for fiscal conservatism that leads to total legislative gridlock. You appear uncompromising and 'cruel' to the press.", effects: { political_capital: -15, approval: -4, base_enthusiasm: 15, funds: 0 }, regional_effects: { plains: 3.0, midwest: -2.0 }, legislative_effects: -5 }
+    ]
+  },
+  {
+    id: 6, phase: "governing", candidate_id: "reagan",
+    question: "A scandal is brewing: members of your NSC secretly sold weapons to Iran to fund anti-communist 'Contra' rebels in Nicaragua, despite a Congressional ban. The press is calling it 'Iran-Contra.' How do you handle it?",
+    answers: [
+      { text: "Address the nation: 'My heart and my best intentions still tell me that's true, but the facts and the evidence tell me it is not.'", feedback: "A moment of vulnerability and accountability. You take the hit for the 'process' while protecting the presidency. Approval drops but you survive.", effects: { political_capital: -10, approval: -8, base_enthusiasm: 10, funds: 0 }, regional_effects: { midwest: -3.0, northeast: -4.0, west_coast: -4.0 }, legislative_effects: -8 },
+      { text: "Fire the principal actors (North and Poindexter) and claim total ignorance of the operational details.", feedback: "The 'plausible deniability' play. It saves your approval in the short term but leads to a long, damaging independent investigation.", effects: { political_capital: 10, approval: -2, base_enthusiasm: -15, funds: 0 }, regional_effects: { midwest: -1.0 }, legislative_effects: -5 },
+      { text: "Defend the operation as a necessary strategic move in the Cold War, regardless of the 'Boland Amendment.'", feedback: "Fires up your base as a 'Cold Warrior,' but you face calls for impeachment from a furious Congress. The presidency is paralyzed.", effects: { political_capital: -30, approval: -12, base_enthusiasm: 30, funds: 0 }, regional_effects: { plains: 5.0, south: 4.0, northeast: -8.0, west_coast: -8.0 }, legislative_effects: -15 }
+    ]
+  },
+  {
+    id: 7, phase: "campaign", candidate_id: "reagan",
+    question: "Your re-election campaign kicks off. The economy is booming, and your approval is high. What is the central theme of your campaign?",
+    answers: [
+      { text: "Morning in America: Focus on optimism, growth, and the restoration of American pride.", feedback: "One of the most effective campaign themes in history. You win over 'Reagan Democrats' across the industrial heartland.", effects: { political_capital: 0, approval: 6, base_enthusiasm: 15, funds: -40000 }, regional_effects: { midwest: 6.0, south: 5.0, northeast: 3.0, west_coast: 3.0, plains: 4.0 } },
+      { text: "Peace Through Strength: Focus on your military buildup and your firm stance against the Soviet Union.", feedback: "Solidifies your base and attracts security-conscious voters, but the 'Morning in America' warmth is slightly diminished.", effects: { political_capital: 5, approval: 3, base_enthusiasm: 20, funds: -30000 }, regional_effects: { plains: 6.0, south: 5.0, west_coast: 4.0 } },
+      { text: "The Tax-Cutter: Contrast your record with the opponent's promise to raise taxes to balance the budget.", feedback: "A sharp, effective contrast. You put the opponent on the defensive immediately. 'There they go again.'", effects: { political_capital: 0, approval: 4, base_enthusiasm: 12, funds: -20000 }, regional_effects: { midwest: 4.0, south: 4.0, plains: 3.0 } }
+    ]
+  },
+  {
+    id: 8, phase: "campaign", candidate_id: "reagan",
+    question: "In the first debate, you appeared tired and confused. The press is raising questions about your age and mental fitness. How do you recover in the second debate?",
+    answers: [
+      { text: "The Wit: 'I will not make age an issue of this campaign. I am not going to exploit, for political purposes, my opponent's youth and inexperience.'", feedback: "Even your opponent laughs. The age issue is dead. You have reclaimed the narrative with a single line.", effects: { political_capital: 10, approval: 8, base_enthusiasm: 20, funds: 0 }, regional_effects: { midwest: 5.0, northeast: 5.0, south: 4.0, west_coast: 4.0, plains: 4.0 } },
+      { text: "The Substance: Ignore the age comments and deliver a flawless, high-energy recitation of your second-term policy goals.", feedback: "A disciplined performance that reassures the public of your competence. It lacks the 'magic' of the wit but gets the job done.", effects: { political_capital: 5, approval: 4, base_enthusiasm: 10, funds: 0 }, regional_effects: { midwest: 3.0, northeast: 2.0 } },
+      { text: "The Fighter: Attack the moderator and the press for focusing on trivialities while the world is at risk.", feedback: "Fires up the base but you appear grumpy and defensive to the undecided voters. The age questions persist.", effects: { political_capital: -5, approval: -2, base_enthusiasm: 15, funds: 0 }, regional_effects: { plains: 3.0 } }
+    ]
+  },
+  {
+    id: 9, phase: "campaign", candidate_id: "reagan",
+    question: "Your opponent, Walter Mondale, has pledged to raise taxes to reduce the deficit. How does your campaign respond to this 'honesty' play?",
+    answers: [
+      { text: "Relentless Attack: 'He'll raise your taxes, and I won't.' Run ads showing a tax collector at a family's dinner table.", feedback: "Brutally effective. You label the Democrats as the party of 'Tax and Spend.' Mondale's support among the working class craters.", effects: { political_capital: 0, approval: 5, base_enthusiasm: 18, funds: -30000 }, regional_effects: { midwest: 6.0, south: 5.0, plains: 5.0 } },
+      { text: "Economic Education: Explain how lower taxes lead to more revenue through growth — the 'Laffer Curve' in prime time.", feedback: "Intellectually consistent but a bit academic for a campaign. It shores up the 'true believers' but leaves swing voters cold.", effects: { political_capital: 5, approval: 2, base_enthusiasm: 10, funds: -20000 }, regional_effects: { plains: 4.0, south: 3.0 } },
+      { text: "Promise a future 'Tax Reform' bill that simplifies the code and lowers rates even further.", feedback: "A forward-looking message that sets the stage for your second-term agenda. It keeps the focus on your strengths.", effects: { political_capital: 10, approval: 4, base_enthusiasm: 8, funds: -25000 }, regional_effects: { midwest: 3.0, northeast: 2.0 } }
+    ]
+  },
+  {
+    id: 10, phase: "campaign", candidate_id: "reagan",
+    question: "A small Caribbean island, Grenada, has been taken over by a pro-Soviet military junta. American medical students are on the island. What is your response?",
+    answers: [
+      { text: "Operation Urgent Fury: Launch a full-scale military invasion to rescue the students and restore democracy.", feedback: "A swift, decisive military victory. It erases the 'Vietnam Syndrome' and shows America is back. Approval ratings surge.", effects: { political_capital: 15, approval: 7, base_enthusiasm: 22, funds: -20000 }, regional_effects: { south: 6.0, plains: 5.0, midwest: 4.0, northeast: 3.0, west_coast: 3.0 } },
+      { text: "Negotiate through regional partners for the safe return of the students and a transition to elections.", feedback: "A peaceful resolution but it lacks the symbolic power of the military win. The base feels you missed an opportunity.", effects: { political_capital: 5, approval: 3, base_enthusiasm: -10, funds: 0 }, regional_effects: { northeast: 2.0, west_coast: 2.0 } },
+      { text: "Issue a stern warning and move a carrier strike group into the region as a show of force.", feedback: "A measured response that avoids war but keeps the pressure on. It's safe, but doesn't provide the 'Commander in Chief' boost.", effects: { political_capital: 0, approval: 4, base_enthusiasm: 5, funds: -10000 }, regional_effects: { south: 2.0, plains: 2.0 } }
+    ]
+  },
+  {
+    id: 11, phase: "campaign", candidate_id: "reagan",
+    question: "Election Eve. You are leading in almost every state. You have a chance for a historic sweep. Where do you make your final appearance?",
+    answers: [
+      { text: "A massive rally in Minnesota — the opponent's home state. Try to win all 50 states.", feedback: "The audacity of the move fires up the nation. You narrowly miss winning Minnesota, but you win the other 49 states.", effects: { political_capital: 0, approval: 5, base_enthusiasm: 25, funds: -30000 }, regional_effects: { midwest: 7.0, northeast: 5.0, south: 5.0, west_coast: 5.0, plains: 5.0 } },
+      { text: "A nostalgic return to Dixon, Illinois — your childhood home. A message of American values.", feedback: "A beautiful, emotional close to the campaign. It reinforces the 'Morning in America' theme and secures the heartland.", effects: { political_capital: 5, approval: 4, base_enthusiasm: 15, funds: -25000 }, regional_effects: { midwest: 5.0, plains: 4.0 } },
+      { text: "A primetime address from the Oval Office — a fatherly message of unity and the work yet to be done.", feedback: "The ultimate 'presidential' move. It wins over any remaining undecideds who want stability and continuity.", effects: { political_capital: 10, approval: 6, base_enthusiasm: 8, funds: -20000 }, regional_effects: { midwest: 3.0, northeast: 3.0, south: 3.0, west_coast: 3.0, plains: 3.0 } }
+    ]
+  },
+  {
+    id: 12, phase: "campaign", candidate_id: "reagan",
+    question: "Election Night. The map is turning almost entirely red. It's a landslide of historic proportions. What is your victory message?",
+    answers: [
+      { text: "A message of National Unity: 'This wasn't a victory of a party, it was a victory of the American people.'", feedback: "A soaring, gracious speech that sets the tone for your second term. You have a massive mandate for further reform.", effects: { political_capital: 20, approval: 8, base_enthusiasm: 15, funds: 0 }, regional_effects: { midwest: 5.0, northeast: 5.0, south: 5.0, west_coast: 5.0, plains: 5.0 } },
+      { text: "A mandate for the Revolution: 'You ain't seen nothing yet!' Reiterate your commitment to tax cuts and SDI.", feedback: "Fires up the base for the battles ahead. You've won the election, but the legislative war for the second term begins now.", effects: { political_capital: 10, approval: 4, base_enthusiasm: 25, funds: 0 }, regional_effects: { plains: 5.0, south: 5.0 } },
+      { text: "A focus on the future: 'The best days of America are yet to come.' Focus on the next generation.", feedback: "A classic Reagan optimistic close. You leave the nation feeling good about themselves and their country.", effects: { political_capital: 15, approval: 6, base_enthusiasm: 10, funds: 0 }, regional_effects: { midwest: 3.0, northeast: 3.0 } }
+    ]
+  },
+
   {
     id: 12, phase: "campaign", candidate_id: "newsom",
     question: "Election Night. You are ahead in four of the six swing states. One key state is still too close to call. Late mail-in ballots are being processed. What is your final message to the nation?",
