@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Streamlined Game Map Engine</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    .map-container {
+      width: 100%;
+      max-width: 900px;
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+    /* Smooth state color transitions */
+    .state-path {
+      cursor: pointer;
+      transition: fill 0.25s ease, stroke 0.2s ease;
+    }
+    .state-path:hover {
+      fill: #64748b !important;
+      stroke: #f8fafc;
+      stroke-width: 2px;
+    }
+    .controls {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button:hover { background: #2563eb; }
+  </style>
+</head>
+<body>
+
+  <h1>Campaign Map Prototype</h1>
+  
+  <div class="map-container">
+    <svg id="campaign-map" viewBox="0 0 925 595" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+      <g id="states-layer" stroke="#1e293b" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        
+        <path id="US-AL" class="state-path" fill="#cbd5e1" data-name="Alabama" d="M158.07,453.67 L157.75,539.03 L159.36,540.00 L162.44,540.16 L163.89,539.03 L173.59,548.73 L186.04,545.01 L197.03,559.23 L208.51,571.36 L214.65,577.83 L214.17,584.29 L210.77,585.75 L196.55,579.77 L190.73,569.74 L185.23,568.77 L179.25,560.53 L163.41,446.79 Z" />
+        
+        <path id="US-AK" class="state-path" fill="#cbd5e1" data-name="Alaska" d="M144.91,382.62 L141.96,386.24 L161.36,397.88 L173.48,405.47 L188.19,414.04 L205.00,424.07 L242.24,429.20 L259.50,310.07 L175.76,298.15 L158.14,314.46 L157.23,335.73 L159.17,351.96 L153.92,360.88 L147.08,373.71 Z" />
+        
+        <path id="US-HI" class="state-path" fill="#cbd5e1" data-name="Hawaii" d="M144.69,382.19 L150.12,379.69 L147.11,376.16 L151.88,369.42 L159.30,357.27 L157.85,346.05 L84.25,232.51 L36.07,149.21 L29.23,173.18 L21.80,185.14 L26.97,203.57 L31.66,233.48 L35.05,260.48 L41.68,273.57 L44.43,296.37 L50.09,323.20 L67.55,332.25 L78.05,344.54 L96.90,355.79 L101.10,376.64 L130.84,380.84 Z" />
+        
+        <path id="US-CA" class="state-path" fill="#cbd5e1" data-name="California" d="M36.18,248.03 L34.89,252.23 L35.05,260.48 L39.10,266.78 L41.68,273.57 L37.64,279.07 L41.36,286.34 L44.43,296.37 L49.12,305.26 L51.06,310.75 L50.09,323.20 L52.03,327.89 L60.76,330.15 L67.55,332.25 L73.04,340.18 L78.05,344.54 L87.11,353.11 L96.90,355.79 L100.61,365.49 L101.10,376.64 L130.84,380.84 L144.69,382.19 Z" />
+        
+        <path id="US-TX" class="state-path" fill="#cbd5e1" data-name="Texas" d="M305.26,380.12 L320.15,395.42 L345.18,410.12 L360.25,450.90 L350.12,480.11 L325.40,510.60 L290.15,495.20 L275.40,460.10 L260.12,420.50 L280.12,390.15 Z" />
+
+        <path id="US-NY" class="state-path" fill="#cbd5e1" data-name="New York" d="M720.15,150.25 L745.30,165.40 L760.12,190.20 L755.40,215.10 L730.12,225.40 L710.25,200.15 L695.12,175.40 Z" />
+
+        <path id="US-FL" class="state-path" fill="#cbd5e1" data-name="Florida" d="M214.65,577.83 L230.15,590.20 L245.40,610.15 L255.12,630.40 L240.25,640.15 L220.12,615.20 L205.40,590.10 Z" />
+
+        </g>
+    </svg>
+  </div>
+
+  <div class="controls">
+    <button onclick="simulateElection()">Simulate Current Election Map</button>
+    <button onclick="resetColors()">Reset Map</button>
+  </div>
+
+  <script>
+    // 1. Centralized Campaign Trail Palette Hex Definitions
+    const MAP_SPECTRUM = {
+      safe_blue:  '#1c408c',
+      likely_blue: '#577ccc',
+      lean_blue:   '#9caed6',
+      tossup:      '#cbd5e1', // Default slate gray
+      lean_red:    '#ff9999',
+      likely_red:  '#e65c5c',
+      safe_red:    '#b31919'
+    };
+
+    // 2. Full 50-State JavaScript Data Index Mapping Array
+    // This connects every legal postal abbreviation to your game loop database
+    const ALL_STATES = [
+      "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", 
+      "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
+      "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
+      "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
+      "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+    ];
+
+    // 3. Engine Function: Updates any target state instantly based on dynamic data margins
+    function updateStateColor(stateCode, margin) {
+      const stateElement = document.getElementById(`US-${stateCode.toUpperCase()}`);
+      if (!stateElement) return;
+
+      let fillHex = MAP_SPECTRUM.tossup;
+
+      // Positive numbers = Blue (Incumbent), Negative numbers = Red (Challenger)
+      if (margin >= 10)       fillHex = MAP_SPECTRUM.safe_blue;
+      else if (margin >= 5)   fillHex = MAP_SPECTRUM.likely_blue;
+      else if (margin > 0)    fillHex = MAP_SPECTRUM.lean_blue;
+      else if (margin <= -10) fillHex = MAP_SPECTRUM.safe_red;
+      else if (margin <= -5)  fillHex = MAP_SPECTRUM.likely_red;
+      else if (margin < 0)    fillHex = MAP_SPECTRUM.lean_red;
+
+      stateElement.style.fill = fillHex;
+    }
+
+    // 4. Game Interaction Example
+    function simulateElection() {
+      // Loop across the unified tracking directory to randomize or map calculations
+      ALL_STATES.forEach(state => {
+        // Generates a mock voting margin trend between -15% and +15%
+        const simulatedMargin = (Math.random() * 30) - 15;
+        updateStateColor(state, simulatedMargin);
+      });
+    }
+
+    function resetColors() {
+      ALL_STATES.forEach(state => {
+        const stateElement = document.getElementById(`US-${state}`);
+        if (stateElement) stateElement.style.fill = MAP_SPECTRUM.tossup;
+      });
+    }
+
+    // Capture user map clicks for custom mod actions or text event displays
+    document.getElementById('states-layer').addEventListener('click', (e) => {
+      if (e.target.classList.contains('state-path')) {
+        const stateId = e.target.id;
+        const stateName = e.target.getAttribute('data-name');
+        alert(`You clicked on ${stateName} (${stateId}). Trigger game data state lookup!`);
+      }
+    });
+  </script>
+</body>
+</html>

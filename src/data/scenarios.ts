@@ -1281,6 +1281,116 @@ export const SCENARIOS: Scenario[] = [
     ]
   },
 
+  // ─── RICHARD NIXON SCENARIOS ──────────────────────────────────────────────
+  {
+    id: 1, phase: "governing", candidate_id: "nixon",
+    question: "The Vietnam War has dragged on for years, dividing the nation. You promised 'Peace with Honor.' How do you plan to bring the troops home while maintaining American prestige?",
+    answers: [
+      { text: "Vietnamization: Gradually withdraw U.S. combat troops while training and equipping the South Vietnamese to take over.", feedback: "A politically popular strategy at home. It allows you to wind down the war slowly, but critics call it 'prolonging the inevitable.'", effects: { political_capital: 10, approval: 5, base_enthusiasm: 10, funds: 0 }, regional_effects: { midwest: 3.0, northeast: 2.0, south: 2.0 }, legislative_effects: 5 },
+      { text: "Escalate with 'Madman Theory': Order a massive bombing campaign in Cambodia to destroy enemy supply lines and force Hanoi to negotiate.", feedback: "The 'Secret Bombing' leaks, sparking massive anti-war protests across college campuses. You project strength, but at a huge cost to national unity.", effects: { political_capital: -20, approval: -6, base_enthusiasm: 20, funds: -20000 }, regional_effects: { west_coast: -6.0, northeast: -5.0, south: 4.0, plains: 4.0 }, legislative_effects: -10 },
+      { text: "Announce a definitive withdrawal date within 12 months to satisfy the anti-war movement immediately.", feedback: "The protesters are silenced, but the 'hawks' in your party and the military are furious. You appear weak on the world stage.", effects: { political_capital: -15, approval: 3, base_enthusiasm: -20, funds: 0 }, regional_effects: { northeast: 4.0, west_coast: 4.0, plains: -4.0, south: -4.0 }, legislative_effects: -5 }
+    ]
+  },
+  {
+    id: 2, phase: "governing", candidate_id: "nixon",
+    question: "You want to reshape the global balance of power. Henry Kissinger suggests a bold move: opening diplomatic relations with Communist China to isolate the Soviet Union. How do you approach this?",
+    answers: [
+      { text: "Nixon to China: Travel to Beijing personally and meet with Chairman Mao Zedong.", feedback: "A masterstroke of 'Realpolitik.' It stuns the world and gives you massive leverage over Moscow. Even your critics admit it's a historic win.", effects: { political_capital: 20, approval: 10, base_enthusiasm: 10, funds: 0 }, regional_effects: { northeast: 5.0, west_coast: 5.0, midwest: 4.0, south: 3.0, plains: 2.0 }, legislative_effects: 8 },
+      { text: "Initiate low-level 'Ping Pong Diplomacy' and trade talks to slowly thaw relations without a high-profile visit.", feedback: "Safe and cautious. It avoids the backlash from the 'Taiwan Lobby' in your party, but misses the opportunity for a major strategic breakthrough.", effects: { political_capital: 5, approval: 2, base_enthusiasm: -5, funds: 10000 }, regional_effects: { midwest: 1.0 }, legislative_effects: 4 },
+      { text: "Reiterate your commitment to the defense of Taiwan and refuse any contact with the mainland regime.", feedback: "Soothes the anti-communist right, but leaves the U.S. stuck in the rigid bipolarity of the Cold War. You appear stuck in the past.", effects: { political_capital: 10, approval: -2, base_enthusiasm: 15, funds: 0 }, regional_effects: { south: 2.0, plains: 2.0 }, legislative_effects: 2 }
+    ]
+  },
+  {
+    id: 3, phase: "governing", candidate_id: "nixon",
+    question: "Environmental concern is at an all-time high following the first Earth Day. You need a way to manage this issue before the Democrats seize it entirely. How do you respond?",
+    answers: [
+      { text: "Establish the Environmental Protection Agency (EPA) by executive order to consolidate all federal environmental research and regulation.", feedback: "A brilliant move that captures the center. You pass the Clean Air Act with a Democratic Congress, proving you can govern from the middle.", effects: { political_capital: 15, approval: 8, base_enthusiasm: -5, funds: -20000 }, regional_effects: { west_coast: 5.0, northeast: 5.0, midwest: 3.0 }, legislative_effects: 10 },
+      { text: "Push for a series of small, industry-friendly conservation bills while opposing a centralized regulatory agency.", feedback: "Business donors are pleased, but the public perceives you as being weak on pollution. The Democrats use it as a campaign issue.", effects: { political_capital: 5, approval: -3, base_enthusiasm: 5, funds: 30000 }, regional_effects: { northeast: -2.0 }, legislative_effects: 2 },
+      { text: "Ignore the issue entirely, focusing your domestic agenda on welfare reform and 'New Federalism.'", feedback: "The 'New Federalism' plan to return power to the states is popular with governors, but you lose the chance to define the environmental era.", effects: { political_capital: 5, approval: 1, base_enthusiasm: 10, funds: 0 }, regional_effects: { south: 2.0, plains: 2.0 }, legislative_effects: 4 }
+    ]
+  },
+  {
+    id: 4, phase: "governing", candidate_id: "nixon",
+    question: "The economy is struggling with inflation and a trade deficit. The dollar is under pressure. You need to act decisively to stabilize the economy. What is the 'Nixon Shock'?",
+    answers: [
+      { text: "End the Gold Standard: Formally suspend the convertibility of the dollar into gold and impose a 90-day wage and price freeze.", feedback: "The 'Nixon Shock' works in the short term! Markets stabilize and the public loves the wage-freeze. It's a bold display of economic leadership.", effects: { political_capital: 10, approval: 8, base_enthusiasm: 5, funds: 0 }, regional_effects: { midwest: 4.0, northeast: 3.0, west_coast: 3.0, south: 2.0, plains: 2.0 }, legislative_effects: 6 },
+      { text: "Raise interest rates and cut federal spending to fight inflation through traditional fiscal conservative means.", feedback: "The 'austerity' approach. It's economically sound but politically painful. Unemployment rises, and your approval takes a hit before the election.", effects: { political_capital: 15, approval: -6, base_enthusiasm: -15, funds: 20000 }, regional_effects: { midwest: -4.0, plains: -2.0, northeast: 2.0 }, legislative_effects: 4 },
+      { text: "Introduce a modest 'Value Added Tax' to increase federal revenue and reduce the deficit.", feedback: "A highly controversial proposal that is attacked by both labor and business. It dies in Congress and makes you look out of touch.", effects: { political_capital: -20, approval: -4, base_enthusiasm: -10, funds: 30000 }, regional_effects: { northeast: -3.0 }, legislative_effects: -5 }
+    ]
+  },
+  {
+    id: 5, phase: "governing", candidate_id: "nixon",
+    question: "A group of burglars associated with your re-election committee (CREEP) has been caught breaking into the Democratic National Committee headquarters at the Watergate hotel. What is your initial response?",
+    answers: [
+      { text: "The Cover-Up: Direct the CIA to tell the FBI to stop the investigation for 'national security' reasons.", feedback: "The investigation is temporarily stalled. You keep the scandal out of the news for the 1972 election, but you've just committed a felony.", effects: { political_capital: 20, approval: 2, base_enthusiasm: 10, funds: 0 }, regional_effects: { south: 1.0 }, legislative_effects: -5 },
+      { text: "The Transparency Play: Fire any aide involved immediately and cooperate fully with the investigation from day one.", feedback: "A risky move that might save your legacy. The scandal is huge in the short term, but you appear to be cleaning house.", effects: { political_capital: -30, approval: -8, base_enthusiasm: -15, funds: -20000 }, regional_effects: { midwest: -3.0, northeast: -4.0 }, legislative_effects: -10 },
+      { text: "The Dismissal: Label it a 'third-rate burglary' and refuse to comment further, hoping it remains a local crime story.", feedback: "The story stays in the back pages for a few months. It's effective for the campaign, but the 'Plumbers' are still a liability.", effects: { political_capital: 10, approval: 0, base_enthusiasm: 5, funds: 0 }, legislative_effects: 0 }
+    ]
+  },
+  {
+    id: 6, phase: "governing", candidate_id: "nixon",
+    question: "The Special Prosecutor is demanding your secret Oval Office tapes. The courts are closing in. You've ordered the Attorney General to fire him. He has refused and resigned. What is your move in the 'Saturday Night Massacre'?",
+    answers: [
+      { text: "The Purge: Order the next official in line to fire the prosecutor, and the next, until someone complies.", feedback: "You fire the prosecutor, but the 'Massacre' shocks the nation. Impeachment talks begin in earnest. You've lost the moral high ground.", effects: { political_capital: -40, approval: -15, base_enthusiasm: 25, funds: 0 }, regional_effects: { northeast: -10.0, west_coast: -10.0, midwest: -8.0, south: -4.0, plains: -4.0 }, legislative_effects: -20 },
+      { text: "The Compromise: Offer an 'edited transcript' of the tapes verified by a third party to satisfy the subpoena.", feedback: "The 'Stennis Compromise' fails to satisfy the court or the public. You appear to be hiding something even more damaging.", effects: { political_capital: -10, approval: -5, base_enthusiasm: -5, funds: 0 }, regional_effects: { midwest: -2.0 }, legislative_effects: -5 },
+      { text: "The Surrender: Release the tapes in their entirety to the court and appeal to the public for a 'fair judgment.'", feedback: "The 'Smoking Gun' tape is revealed. Your base is devastated by the language and the evidence of the cover-up. The end is near.", effects: { political_capital: -50, approval: -20, base_enthusiasm: -30, funds: 0 }, regional_effects: { plains: -10.0, south: -10.0 }, legislative_effects: -30 }
+    ]
+  },
+  {
+    id: 7, phase: "campaign", candidate_id: "nixon",
+    question: "Your re-election campaign kicks off. You are facing George McGovern, a staunch anti-war liberal. What is the central message of your campaign?",
+    answers: [
+      { text: "The Silent Majority: Appeal to the 'great quiet majority' of Americans who work hard, pay taxes, and love their country.", feedback: "A masterstroke of coalition building. You unite the middle class against the 'radicals' and 'elites' on the left.", effects: { political_capital: 0, approval: 6, base_enthusiasm: 15, funds: -30000 }, regional_effects: { midwest: 6.0, south: 5.0, plains: 5.0, northeast: 2.0, west_coast: 2.0 } },
+      { text: "Law and Order: Focus on the urban unrest and rising crime rates, promising a return to social stability.", feedback: "Resonates strongly with suburban and southern voters. You paint the opponent as being 'soft on crime.'", effects: { political_capital: 5, approval: 4, base_enthusiasm: 18, funds: -20000 }, regional_effects: { south: 6.0, midwest: 4.0, plains: 4.0 } },
+      { text: "The World Leader: Highlight the opening of China and the SALT treaty with the Soviets. Frame the election as a choice of global experience.", feedback: "You appear statesmanship-like and untouchable. McGovern's foreign policy seems amateurish in comparison.", effects: { political_capital: 10, approval: 5, base_enthusiasm: 5, funds: -40000 }, regional_effects: { northeast: 4.0, west_coast: 4.0, midwest: 2.0 } }
+    ]
+  },
+  {
+    id: 8, phase: "campaign", candidate_id: "nixon",
+    question: "McGovern's campaign is in disarray following the withdrawal of his VP pick. How do you exploit this moment of weakness?",
+    answers: [
+      { text: "The 'Acid, Amnesty, and Abortion' Label: Use surrogates to label McGovern's platform as out-of-touch with American values.", feedback: "The label sticks. You effectively define McGovern as a radical before he can define himself. His numbers crater.", effects: { political_capital: -5, approval: 3, base_enthusiasm: 20, funds: 0 }, regional_effects: { plains: 6.0, south: 5.0, midwest: 5.0, northeast: 2.0 } },
+      { text: "The 'Presidential' Silence: Refuse to comment on the VP crisis, allowing the media to focus entirely on McGovern's incompetence.", feedback: "You remain above the fray. McGovern appears frantic and unready for the job, while you look calmly in control of the nation.", effects: { political_capital: 10, approval: 5, base_enthusiasm: 5, funds: 0 }, regional_effects: { midwest: 3.0, northeast: 2.0 } },
+      { text: "Launch a series of positive ads highlighting your own record of achievements to contrast with their chaos.", feedback: "A safe but effective move. You build a sense of 'Nixon's Stability' that wins over the last remaining undecideds.", effects: { political_capital: 5, approval: 4, base_enthusiasm: 10, funds: -25000 }, regional_effects: { midwest: 4.0, south: 2.0 } }
+    ]
+  },
+  {
+    id: 9, phase: "campaign", candidate_id: "nixon",
+    question: "The Pentagon Papers have been leaked to the New York Times, revealing decades of government deception about Vietnam. How do you respond to the leak?",
+    answers: [
+      { text: "Order the 'Plumbers': Direct a secret group to break into the leaker's psychiatrist's office to find dirt to discredit him.", feedback: "The beginning of the end. You've authorized illegal domestic espionage. It stays quiet for now, but it's a ticking time bomb.", effects: { political_capital: 15, approval: 1, base_enthusiasm: 15, funds: 0 }, regional_effects: { south: 2.0, plains: 2.0 }, legislative_effects: -10 },
+      { text: "Seek a court injunction to block further publication on the grounds of national security.", feedback: "The Supreme Court rules against you. You lose the legal battle, and appear to be an enemy of the free press to the urban elites.", effects: { political_capital: -10, approval: -4, base_enthusiasm: -5, funds: -10000 }, regional_effects: { northeast: -4.0, west_coast: -4.0 }, legislative_effects: -5 },
+      { text: "Declassify the entire set of papers yourself, claiming they only prove the failures of the previous Democratic administrations.", feedback: "A brilliant political pivot. You 'own' the transparency and use it to hammer the LBJ and JFK records.", effects: { political_capital: 10, approval: 5, base_enthusiasm: 5, funds: 0 }, regional_effects: { midwest: 3.0, northeast: 2.0 } }
+    ]
+  },
+  {
+    id: 10, phase: "campaign", candidate_id: "nixon",
+    question: "The 'New South' is shifting. You have a chance to break the Democratic hold on the Southern states forever. What is your 'Southern Strategy'?",
+    answers: [
+      { text: "Appeal to 'States' Rights' and use coded language on busing and civil rights to win over disaffected whites.", feedback: "The Southern Strategy works perfectly. You sweep the entire South on election day, redrawing the American political map.", effects: { political_capital: -10, approval: -2, base_enthusiasm: 25, funds: 0 }, regional_effects: { south: 8.0, plains: 5.0, northeast: -5.0, west_coast: -5.0 }, legislative_effects: -5 },
+      { text: "Focus entirely on economic investment and industrial growth in the Sun Belt to win the South on substance.", feedback: "A more inclusive strategy that wins over the emerging middle class in the South without the polarizing baggage.", effects: { political_capital: 10, approval: 4, base_enthusiasm: 10, funds: -30000 }, regional_effects: { south: 5.0, midwest: 3.0, plains: 3.0 } },
+      { text: "Ignore the Southern states and focus your campaign on the industrial 'Rust Belt' and the suburbs of the Northeast.", feedback: "You secure the Midwest but miss the opportunity for a historic realignment. The South remains a battleground for another era.", effects: { political_capital: 0, approval: 2, base_enthusiasm: 12, funds: -20000 }, regional_effects: { midwest: 5.0, northeast: 3.0 } }
+    ]
+  },
+  {
+    id: 11, phase: "campaign", candidate_id: "nixon",
+    question: "Election Eve. You are leading McGovern in almost every state. You have a chance for a historic landslide. Where do you hold your final rally?",
+    answers: [
+      { text: "A massive 'Silent Majority' rally in Ontario, California — your home state.", feedback: "The enthusiasm is record-breaking. You secure the West Coast and signal a total national victory.", effects: { political_capital: 0, approval: 4, base_enthusiasm: 25, funds: -30000 }, regional_effects: { west_coast: 7.0, midwest: 3.0, south: 3.0 } },
+      { text: "A multi-state 'Heartland' blitz through Ohio, Illinois, and Michigan.", feedback: "You lock down the Midwest and guarantee that the 'blue wall' is completely shattered. The landslide is inevitable.", effects: { political_capital: 5, approval: 3, base_enthusiasm: 20, funds: -40000 }, regional_effects: { midwest: 6.0, northeast: 3.0, plains: 3.0 } },
+      { text: "A primetime address from the Lincoln Memorial — a message of 'Peace and Unity.'", feedback: "The imagery is powerful and presidential. You win over the last remaining skeptics who feared your polarizing reputation.", effects: { political_capital: 10, approval: 6, base_enthusiasm: 10, funds: -20000 }, regional_effects: { northeast: 4.0, west_coast: 4.0, midwest: 3.0, south: 3.0, plains: 3.0 } }
+    ]
+  },
+  {
+    id: 12, phase: "campaign", candidate_id: "nixon",
+    question: "Election Night. The results are a map of solid red. You have won 49 states. It is a landslide of historic proportions. What is your victory message?",
+    answers: [
+      { text: "A mandate for 'Four More Years': 'The Great Majority has spoken. We will continue our work for Peace and Prosperity.'", feedback: "A confident, almost defiant speech. You have a massive mandate, but the seeds of Watergate are already growing.", effects: { political_capital: 20, approval: 5, base_enthusiasm: 20, funds: 0 }, regional_effects: { south: 5.0, plains: 5.0, midwest: 5.0, west_coast: 5.0, northeast: 5.0 } },
+      { text: "A message of Reconciliation: 'Let us bring us together. The work of healing a divided nation begins tonight.'", feedback: "A gracious speech that tries to move beyond the polarization of the 60s. The public is hopeful, for now.", effects: { political_capital: 15, approval: 8, base_enthusiasm: 10, funds: 0 }, regional_effects: { midwest: 4.0, northeast: 4.0, west_coast: 4.0, south: 3.0, plains: 3.0 } },
+      { text: "A focus on the 'Next Generation': 'We have built a structure of peace that will last for decades.'", feedback: "You focus on your foreign policy legacy. The world watches with respect, while the domestic press remains wary.", effects: { political_capital: 10, approval: 4, base_enthusiasm: 5, funds: 0 }, regional_effects: { northeast: 3.0, west_coast: 3.0 } }
+    ]
+  },
+
   {
     id: 12, phase: "campaign", candidate_id: "newsom",
     question: "Election Night. You are ahead in four of the six swing states. One key state is still too close to call. Late mail-in ballots are being processed. What is your final message to the nation?",

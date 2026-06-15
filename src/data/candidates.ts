@@ -89,5 +89,13 @@ export const CANDIDATES: Candidate[] = [
     approval: 54, capital: 65, enthusiasm: 80, funds: 210000, legislative_support: 62,
     regions: { northeast: 50.0, west_coast: 52.0, midwest: 54.0, south: 60.0, plains: 64.0 },
     strengths: ['PL', 'SO', 'MW'], weaknesses: ['NE']
+  },
+  {
+    id: 'nixon', name: 'Richard Nixon', era: 'The Silent Majority / Watergate', icon: '✌️',
+    bio: "The tactical mastermind of the GOP. Nixon rose to power promising 'Law and Order' to a divided nation. While his foreign policy brilliance and creation of the EPA won him broad support, his deep-seated paranoia and the shadow of Watergate eventually became his undoing.",
+    accent: '#1e3a8a',
+    approval: 48, capital: 65, enthusiasm: 60, funds: 170000, legislative_support: 45,
+    regions: { northeast: 45.0, west_coast: 48.0, midwest: 52.0, south: 55.0, plains: 58.0 },
+    strengths: ['MW', 'SO'], weaknesses: ['NE']
   }
 ];
